@@ -15,6 +15,7 @@ namespace Renderer{
 
             ~ShaderProgram();
             bool getCompiledStatus() const {return isCompiled; }
+            std::string loadShader(const GLchar* path);
 
             void use() const;
         private:

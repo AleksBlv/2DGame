@@ -3,14 +3,20 @@
 #include "Renderer/shaderProgram.h"
 
 GLfloat points[] = {
-    0.0f, 0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    -0.5, -0.5f, 0.0f
+    -0.5, -0.5, 0.0,
+    -0.5, 0.5, 0.0,
+    0.5, 0.5, 0.0,
+    0.5, 0.5, 0.0,
+    -0.5, -0.5, 0.0,
+    0.5, -0.5, 0.0
 };
 
 GLfloat colors[] = {
-    1.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f,
+    1.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 1.0f,
+    0.0f, 1.0f, 1.0f,
+    0.0f, 1.0f, 1.0f,
+    1.0f, 0.0f, 1.0f,
     0.0f, 0.0f, 1.0f
 };
 
@@ -43,9 +49,11 @@ int main(void)
     
     glClearColor(0.5, 0.5, 0.5, 0);
 
-    std::string vertexShader(vertex_Shader);
-    std::string fragmentShader(fragment_Shader);
-    Renderer::ShaderProgram shaderProgram(vertexShader, fragmentShader);
+    //std::string vertexShader(vertex_Shader);
+    //std::string fragmentShader(fragment_Shader);
+    std::string vertPath = "assets/vert.glsl";
+    std::string fragPath = "assets/frag.glsl";
+    Renderer::ShaderProgram shaderProgram(vertPath, fragPath);
     if(!shaderProgram.getCompiledStatus()){
         std::cerr << "Can't create shader program" <<std::endl;
         return -1;
@@ -82,7 +90,7 @@ int main(void)
 
         shaderProgram.use();
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window.get());

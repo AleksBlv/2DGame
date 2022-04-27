@@ -6,7 +6,7 @@ namespace Renderer{
     class Window{
         
         public:
-            Window(int width, int heigth, char* title);
+            Window(int width, int heigth, const char* title);
             
             bool init();
 
@@ -20,7 +20,7 @@ namespace Renderer{
         private:
             int mWidth = 0;
             int mHeight = 0;
-            char* mTitle;
+            const char* mTitle;
             GLFWwindow* pWindow = nullptr;
             void setKeyCallback();
             void setSizeCallback();

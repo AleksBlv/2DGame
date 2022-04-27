@@ -3,12 +3,10 @@
 
 namespace Renderer{
 
-    Window::Window(int width, int heigth, char* title){
+    Window::Window(int width, int heigth, const char* title){
         mWidth = width;
         mHeight = heigth;
         mTitle = title;
-
-        
     }
 
     bool Window::init(){
