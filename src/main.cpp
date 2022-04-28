@@ -6,18 +6,19 @@ GLfloat points[] = {
     -0.5, -0.5, 0.0,
     -0.5, 0.5, 0.0,
     0.5, 0.5, 0.0,
-    0.5, 0.5, 0.0,
-    -0.5, -0.5, 0.0,
     0.5, -0.5, 0.0
 };
 
 GLfloat colors[] = {
-    1.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f,
     1.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, 1.0f,
-    0.0f, 1.0f, 1.0f,
-    1.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f
+    0.0f, 0.0f, 1.0f,
+    1.0f, 0.0f, 0.0f
+};
+
+GLuint indicies[] = {
+    0, 1, 2,
+    0, 2, 3
 };
 
 const char* vertex_Shader = 
@@ -69,6 +70,7 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
+
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -81,6 +83,11 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+    GLuint ibo = 0;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
+
 
     /* Loop until the user closes the window */
     while (!window.shouldClose())
@@ -90,7 +97,9 @@ int main(void)
 
         shaderProgram.use();
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        //6 is a number of indicies we draw
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window.get());
