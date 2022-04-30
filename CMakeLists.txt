@@ -11,6 +11,10 @@ add_executable(${PROJECT_NAME}
     src/Renderer/shaderProgram.cpp 
     src/Renderer/window.h 
     src/Renderer/window.cpp 
+    src/fromGit/stb_image.h
+    src/fromGit/stb_image.cpp
+    src/Renderer/texture.h
+    src/Renderer/texture.cpp
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

@@ -1,6 +1,9 @@
 #include "Renderer/window.h"
 #include <iostream>
 #include "Renderer/shaderProgram.h"
+#include "Renderer/texture.h"
+
+//TODO: copy assets folder into the build folder
 
 GLfloat points[] = {
     -0.5, -0.5, 0.0,
@@ -14,6 +17,13 @@ GLfloat colors[] = {
     1.0f, 1.0f, 1.0f,
     0.0f, 0.0f, 1.0f,
     1.0f, 0.0f, 0.0f
+};
+
+GLfloat textures[] = {
+    0.0f, 1.0f,
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    1.0f, 1.0f
 };
 
 GLuint indicies[] = {
@@ -47,6 +57,7 @@ int main(void)
         return -1;
     }
 
+    Renderer::Texture myTexture("assets/web_cat.jpeg");
     
     glClearColor(0.5, 0.5, 0.5, 0);
 
@@ -70,6 +81,11 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
+    GLuint texturesVBO = 0;
+    glGenBuffers(1, &texturesVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_STATIC_DRAW);
+
 
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
@@ -83,19 +99,26 @@ int main(void)
     glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    
+    
+
     GLuint ibo = 0;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
-
+    
     /* Loop until the user closes the window */
     while (!window.shouldClose())
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-
+        
         shaderProgram.use();
+        myTexture.bindTexture(0);
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         //6 is a number of indicies we draw
