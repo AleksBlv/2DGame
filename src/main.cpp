@@ -3,6 +3,10 @@
 #include "Renderer/shaderProgram.h"
 #include "Renderer/texture.h"
 
+#include "../external/glm/glm.hpp"
+#include "../external/glm/gtc/matrix_transform.hpp"
+#include "../external/glm/gtc/type_ptr.hpp"
+
 //TODO: copy assets folder into the build folder
 
 GLfloat points[] = {
@@ -51,7 +55,7 @@ const char* fragment_Shader =
 
 int main(void)
 {
-    Renderer::Window window(800, 600, "Triangle");
+    Renderer::Window window(800, 800, "Triangle");
     if(!window.init()){
         std::cerr << "failed to create window" <<std::endl;
         return -1;
@@ -110,6 +114,12 @@ int main(void)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
+    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0);
+    glm::mat4 trans = glm::mat4(1.0f);
+
+    //trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.f, 0.f, 1.f));
+    //trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    //trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
     
     /* Loop until the user closes the window */
     while (!window.shouldClose())
@@ -118,6 +128,14 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
         
         shaderProgram.use();
+
+        
+        trans = glm::rotate(trans, glm::sin((float)glfwGetTime())/10, glm::vec3(0.0f, 0.0f, 1.0f));
+
+        GLuint transformLocation = glGetUniformLocation(shaderProgram.getProgramID(), "transform");
+        glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+
+
         myTexture.bindTexture(0);
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);

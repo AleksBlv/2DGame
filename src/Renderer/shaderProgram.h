@@ -18,6 +18,8 @@ namespace Renderer{
             std::string loadShader(const GLchar* path);
 
             void use() const;
+
+            inline GLuint getProgramID(){return programID;}
         private:
             bool createShader(GLenum shaderType,const std::string& shaderSrc, GLuint& shaderId);
             
