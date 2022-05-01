@@ -119,7 +119,7 @@ int main(void)
 
     //trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.f, 0.f, 1.f));
     //trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-    //trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans = glm::translate(trans, glm::vec3(-0.5f, -0.5f, 0.0f));
     
     /* Loop until the user closes the window */
     while (!window.shouldClose())
