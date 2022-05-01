@@ -10,10 +10,14 @@
 //TODO: copy assets folder into the build folder
 
 GLfloat points[] = {
-    -0.5, -0.5, 0.0,
-    -0.5, 0.5, 0.0,
-    0.5, 0.5, 0.0,
-    0.5, -0.5, 0.0
+    -0.5, 0.5, 0.5,
+    -0.5, -0.5, 0.5,
+    0.5, -0.5, 0.5,
+    0.5, 0.5, 0.5,
+    -0.5, 0.5, -0.5,
+    -0.5, -0.5, -0.5,
+    0.5, -0.5, -0.5,
+    0.5, 0.5, -0.5
 };
 
 GLfloat colors[] = {
@@ -27,35 +31,39 @@ GLfloat textures[] = {
     0.0f, 1.0f,
     0.0f, 0.0f,
     1.0f, 0.0f,
-    1.0f, 1.0f
+    1.0f, 1.0f,
+
+    0.0f, 0.0f,
+    0.0f, 1.0f,
+    1.0f, 1.1f,
+    1.f, 0.0f
+
 };
 
 GLuint indicies[] = {
     0, 1, 2,
-    0, 2, 3
+    0, 2, 3,
+
+    4, 5, 6,
+    4, 6, 7,
+
+    0, 4, 1,
+    4, 1, 5,
+
+    2, 3, 7,
+    2, 7, 6,
+
+    0, 4, 3,
+    4, 3, 7,
+
+    1, 5, 2,
+    5, 2, 6
 };
 
-const char* vertex_Shader = 
-"#version 410\n"
-"layout(location = 0) in vec3 vertexPosition;\n"
-"layout(location = 1) in vec3 vertexColor;\n"
-"out vec3 color;"
-"void main(){"
-"   color = vertexColor;"
-"   gl_Position = vec4(vertexPosition, 1.0);"
-"}";
-
-const char* fragment_Shader = 
-"#version 410\n"
-"in vec3 color;"
-"out vec4 fragColor;"
-"void main(){"
-"   fragColor = vec4(color, 1.0);"
-"}";
 
 int main(void)
 {
-    Renderer::Window window(800, 800, "Triangle");
+    Renderer::Window window(800, 600, "Triangle");
     if(!window.init()){
         std::cerr << "failed to create window" <<std::endl;
         return -1;
@@ -115,30 +123,42 @@ int main(void)
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
     glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0);
-    glm::mat4 trans = glm::mat4(1.0f);
+    glm::mat4 model = glm::mat4(1.0f);
 
-    //trans = glm::rotate(trans, glm::radians(90.f), glm::vec3(0.f, 0.f, 1.f));
+    //model = glm::rotate(model, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
     //trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-    trans = glm::translate(trans, glm::vec3(-0.5f, -0.5f, 0.0f));
-    
+    //trans = glm::translate(trans, glm::vec3(-0.5f, -0.5f, 0.0f));
+
+    glm::mat4 view = glm::mat4(1.f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.f), (float)(window.getWidth()/window.getHeight()), 0.1f, 100.f);
+    glEnable(GL_DEPTH_TEST);
     /* Loop until the user closes the window */
     while (!window.shouldClose())
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         shaderProgram.use();
 
         
-        trans = glm::rotate(trans, glm::sin((float)glfwGetTime())/10, glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, 0.01f, glm::vec3(1.0f, 1.0f, 0.0f));
 
-        GLuint transformLocation = glGetUniformLocation(shaderProgram.getProgramID(), "transform");
-        glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+        GLuint modelLoc = glGetUniformLocation(shaderProgram.getProgramID(), "model");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+        GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+        GLuint projectionLoc = glGetUniformLocation(shaderProgram.getProgramID(), "projection");
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 
         myTexture.bindTexture(0);
         glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
         //6 is a number of indicies we draw
         //glDrawArrays(GL_TRIANGLES, 0, 6);
 
