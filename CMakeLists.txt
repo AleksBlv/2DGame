@@ -15,6 +15,8 @@ add_executable(${PROJECT_NAME}
     src/fromGit/stb_image.cpp
     src/Renderer/texture.h
     src/Renderer/texture.cpp
+    src/Renderer/model.h
+    src/Renderer/model.cpp
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

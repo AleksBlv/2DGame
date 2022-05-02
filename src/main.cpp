@@ -2,12 +2,57 @@
 #include <iostream>
 #include "Renderer/shaderProgram.h"
 #include "Renderer/texture.h"
+#include "Renderer/model.h"
 
 #include "../external/glm/glm.hpp"
 #include "../external/glm/gtc/matrix_transform.hpp"
 #include "../external/glm/gtc/type_ptr.hpp"
 
 //TODO: copy assets folder into the build folder
+
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};
 
 GLfloat points[] = {
     -0.5, 0.5, 0.5,
@@ -60,6 +105,19 @@ GLuint indicies[] = {
     5, 2, 6
 };
 
+glm::vec3 cubePositions[] = {
+    glm::vec3( 0.0f,  0.0f,  0.0f), 
+    glm::vec3( 2.0f,  5.0f, -15.0f), 
+    glm::vec3(-1.5f, -2.2f, -2.5f),  
+    glm::vec3(-3.8f, -2.0f, -12.3f),  
+    glm::vec3( 2.4f, -0.4f, -3.5f),  
+    glm::vec3(-1.7f,  3.0f, -7.5f),  
+    glm::vec3( 1.3f, -2.0f, -2.5f),  
+    glm::vec3( 1.5f,  2.0f, -2.5f), 
+    glm::vec3( 1.5f,  0.2f, -1.5f), 
+    glm::vec3(-1.3f,  1.0f, -1.5f)  
+};
+
 
 int main(void)
 {
@@ -83,47 +141,18 @@ int main(void)
         return -1;
     }
 
-    GLuint pointsVBO = 0;
-    glGenBuffers(1, &pointsVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, pointsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+    std::vector<float> d;
+    for(auto x: vertices){
+        d.push_back(x);
+    }
+   
+    Renderer::Model model;
+    model.init(d, 36);
+    model.setTexture(&myTexture);
 
-    GLuint colorsVBO = 0;
-    glGenBuffers(1, &colorsVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-    GLuint texturesVBO = 0;
-    glGenBuffers(1, &texturesVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(textures), textures, GL_STATIC_DRAW);
-
-
-    GLuint vao = 0;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, pointsVBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, colorsVBO);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-    glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-    
-    
-
-    GLuint ibo = 0;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
     glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0);
-    glm::mat4 model = glm::mat4(1.0f);
+    //glm::mat4 model = glm::mat4(1.0f);
 
     //model = glm::rotate(model, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
     //trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -135,6 +164,13 @@ int main(void)
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.f), (float)(window.getWidth()/window.getHeight()), 0.1f, 100.f);
     glEnable(GL_DEPTH_TEST);
+
+    // glm::mat4 models[10];
+    // for(int i = 0; i<10; i++){
+    //     models[i] = glm::mat4(1.f);
+    //     models[i] = glm::translate(model, cubePositions[i]);
+    // }
+
     /* Loop until the user closes the window */
     while (!window.shouldClose())
     {
@@ -142,25 +178,21 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         shaderProgram.use();
-
+       
         
-        model = glm::rotate(model, 0.01f, glm::vec3(1.0f, 1.0f, 0.0f));
-
-        GLuint modelLoc = glGetUniformLocation(shaderProgram.getProgramID(), "model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        // model = glm::rotate(model, 0.01f, glm::vec3(1.0f, 0.0f, 0.0f));
+        
 
         GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
         GLuint projectionLoc = glGetUniformLocation(shaderProgram.getProgramID(), "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        model.rotate(1.f, 1.f, 1.f, 1.f);
+        model.draw(shaderProgram.getProgramID());
+        
 
-
-        myTexture.bindTexture(0);
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
-        //6 is a number of indicies we draw
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window.get());
