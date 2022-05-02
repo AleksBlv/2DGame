@@ -20,8 +20,9 @@ Texture::Texture(const std::string& filePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     if(localBuffer){
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
-	glBindTexture(GL_TEXTURE_2D, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, 0);
     }else{
         std::cerr<< "Unable to load texture" <<std::endl;
     }
@@ -34,5 +35,8 @@ void Texture::bindTexture(unsigned int slot){
     glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
+void Texture::unbindTexture(){
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 }

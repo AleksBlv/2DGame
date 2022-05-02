@@ -57,10 +57,15 @@ void Model::unbind(){
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+    texture->unbindTexture();
 }
 
 void Model::rotate(float x, float y, float z, float grad){
     transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(x, y, z));
+}
+
+void Model::move(float x, float y, float z){
+    transformMatrix = glm::translate(transformMatrix, glm::vec3(x, y, z));
 }
 
 }

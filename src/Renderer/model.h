@@ -18,6 +18,7 @@ class Model{
         void draw(unsigned int shaderId);
         void unbind();
         void rotate(float x, float y, float z, float grad);
+        void move(float x, float y, float z);
 
     private:
         void genBuffers();

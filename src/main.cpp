@@ -145,10 +145,15 @@ int main(void)
     for(auto x: vertices){
         d.push_back(x);
     }
-   
-    Renderer::Model model;
-    model.init(d, 36);
-    model.setTexture(&myTexture);
+
+    std::vector<std::shared_ptr<Renderer::Model>> models;
+    for (int i=0; i<10; i++){
+        auto obj = std::make_shared<Renderer::Model>();
+        obj->init(d, 36);
+        obj->setTexture(&myTexture);
+        obj->move(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
+        models.push_back(obj);
+    }
 
 
     glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0);
@@ -178,21 +183,16 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         shaderProgram.use();
-       
-        
-        // model = glm::rotate(model, 0.01f, glm::vec3(1.0f, 0.0f, 0.0f));
-        
 
         GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
         GLuint projectionLoc = glGetUniformLocation(shaderProgram.getProgramID(), "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        model.rotate(1.f, 1.f, 1.f, 1.f);
-        model.draw(shaderProgram.getProgramID());
-        
-
-        
+        for(auto& model: models){
+            model->rotate(1.f, 1.f, 1.f, 1.f);
+            model->draw(shaderProgram.getProgramID());
+        }
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window.get());
