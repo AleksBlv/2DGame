@@ -3,6 +3,7 @@
 #include "Renderer/shaderProgram.h"
 #include "Renderer/texture.h"
 #include "Renderer/model.h"
+#include "Renderer/camera.h"
 
 #include "../external/glm/glm.hpp"
 #include "../external/glm/gtc/matrix_transform.hpp"
@@ -170,23 +171,44 @@ int main(void)
     projection = glm::perspective(glm::radians(45.f), (float)(window.getWidth()/window.getHeight()), 0.1f, 100.f);
     glEnable(GL_DEPTH_TEST);
 
-    // glm::mat4 models[10];
-    // for(int i = 0; i<10; i++){
-    //     models[i] = glm::mat4(1.f);
-    //     models[i] = glm::translate(model, cubePositions[i]);
-    // }
+    //camera
+    // glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    // glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+    // glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+    // glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f); 
+    // glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+    // glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+    // glm::mat4 view;
+    // view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), 
+  	// 	   glm::vec3(0.0f, 0.0f, 0.0f), 
+  	// 	   glm::vec3(0.0f, 1.0f, 0.0f));
+
+    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+    Renderer::Camera camera(cameraPos, cameraFront, cameraUp, &window);
+   
 
     /* Loop until the user closes the window */
     while (!window.shouldClose())
     {
+        camera.move();
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         shaderProgram.use();
 
+        // const float radius = 10.0f;
+        // float camX = sin(glfwGetTime()) * radius;
+        // float camZ = cos(glfwGetTime()) * radius;
+        // glm::mat4 view;
+        // view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));  
+
+        auto view = camera.getCameraMatrix();
         GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
+        
         GLuint projectionLoc = glGetUniformLocation(shaderProgram.getProgramID(), "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
         for(auto& model: models){

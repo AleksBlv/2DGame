@@ -17,6 +17,8 @@ add_executable(${PROJECT_NAME}
     src/Renderer/texture.cpp
     src/Renderer/model.h
     src/Renderer/model.cpp
+    src/Renderer/camera.h
+    src/Renderer/camera.cpp
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -32,3 +34,4 @@ target_link_libraries(${PROJECT_NAME} glad)
 
 add_subdirectory(external/glm)
 target_link_libraries(${PROJECT_NAME} glm)
+
