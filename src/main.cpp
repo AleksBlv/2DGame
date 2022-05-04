@@ -206,13 +206,7 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        shaderProgram.use();
-
-        // const float radius = 10.0f;
-        // float camX = sin(glfwGetTime()) * radius;
-        // float camZ = cos(glfwGetTime()) * radius;
-        // glm::mat4 view;
-        // view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));  
+        shaderProgram.use(); 
 
         auto view = camera.getCameraMatrix();
         GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
