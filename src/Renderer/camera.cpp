@@ -2,7 +2,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glfw/glfw3.h"
 
-float DEFAUL_SPEED = 0.05f;
+float DEFAUL_SPEED = 2.f;
 
 namespace Renderer{
 
@@ -38,18 +38,19 @@ glm::mat4 Camera::getCameraMatrix(){
     return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
 
-void Camera::move(){
+void Camera::move(float deltaTime){
+    auto speed = cameraSpeed * deltaTime;
     if(glfwGetKey(window->get(), GLFW_KEY_W) == GLFW_PRESS){
-        cameraPos += cameraSpeed * cameraFront;
+        cameraPos += speed * cameraFront;
     }
     if(glfwGetKey(window->get(), GLFW_KEY_S) == GLFW_PRESS){
-        cameraPos -= cameraSpeed * cameraFront;
+        cameraPos -= speed * cameraFront;
     }
     if(glfwGetKey(window->get(), GLFW_KEY_A) == GLFW_PRESS){
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
     }
     if(glfwGetKey(window->get(), GLFW_KEY_D) == GLFW_PRESS){
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
     }
 }
 

@@ -188,11 +188,15 @@ int main(void)
     glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
     Renderer::Camera camera(cameraPos, cameraFront, cameraUp, &window);
    
-
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
     /* Loop until the user closes the window */
     while (!window.shouldClose())
     {
-        camera.move();
+        float currentTime = glfwGetTime();
+        deltaTime = currentTime - lastFrame;
+        lastFrame = currentTime;
+        camera.move(deltaTime);
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         

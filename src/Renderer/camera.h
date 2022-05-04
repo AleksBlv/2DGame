@@ -10,7 +10,7 @@ class Camera{
         Camera(Window* w);
         ~Camera() = default;
 
-        void move();
+        void move(float deltaTime);
 
         void setCameraSpeed(float val);
         void setCameraPos(glm::vec3 pos);
