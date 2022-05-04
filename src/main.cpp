@@ -191,10 +191,16 @@ int main(void)
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
     /* Loop until the user closes the window */
+    int fpsCap = 60;
+    float fpsDelay = (1000.f / fpsCap) / 1000.f;
+
     while (!window.shouldClose())
     {
         float currentTime = glfwGetTime();
         deltaTime = currentTime - lastFrame;
+        if(deltaTime < fpsDelay){
+            continue;
+        }
         lastFrame = currentTime;
         camera.move(deltaTime);
         /* Render here */
