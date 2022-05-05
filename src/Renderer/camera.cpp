@@ -52,6 +52,12 @@ void Camera::move(float deltaTime){
     if(glfwGetKey(window->get(), GLFW_KEY_D) == GLFW_PRESS){
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
     }
+    if(glfwGetKey(window->get(), GLFW_KEY_R) == GLFW_PRESS){
+        cameraPos += speed * cameraUp;
+    }
+    if(glfwGetKey(window->get(), GLFW_KEY_F) == GLFW_PRESS){
+        cameraPos -= speed * cameraUp;
+    }
 }
 
 }
