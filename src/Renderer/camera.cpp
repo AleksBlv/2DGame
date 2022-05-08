@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <GLFW/glfw3.h>
+#include <iostream>
 
 float DEFAUL_SPEED = 2.f;
 
@@ -11,6 +12,7 @@ Camera::Camera(glm::vec3 pos, glm::vec3 front, glm::vec3 up, Window* w):cameraPo
                                                             cameraUp(up),
                                                             window(w){
     cameraSpeed = DEFAUL_SPEED;
+    window->setCamera(this);
 }
 
 Camera::Camera(Window* w){
@@ -19,6 +21,7 @@ Camera::Camera(Window* w){
     cameraFront = glm::vec3(0.f);
     cameraUp = glm::vec3(0.f);
     cameraSpeed = DEFAUL_SPEED;
+    window->setCamera(this);
 }
 
 void Camera::setCameraSpeed(float val){
@@ -35,6 +38,11 @@ void Camera::setCameraUp(glm::vec3 up){
 }
 
 glm::mat4 Camera::getCameraMatrix(){
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(direction);
     return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
 
@@ -59,5 +67,22 @@ void Camera::move(float deltaTime){
         cameraPos -= speed * cameraUp;
     }
 }
+
+float Camera::getYaw(){
+    return yaw;
+}
+void Camera::setYaw(float val){
+    
+    yaw = val;
+}
+float Camera::getPitch(){
+    return pitch;
+}
+void Camera::setPitch(float val){
+    pitch = val;
+    if (pitch > 89.f) pitch = 89.f;
+    if (pitch < -89.f) pitch = -89.f;
+}
+
 
 }

@@ -16,6 +16,12 @@ class Camera{
         void setCameraPos(glm::vec3 pos);
         void setCameraFront(glm::vec3 front);
         void setCameraUp(glm::vec3 up);
+        float getYaw();
+        void setYaw(float val);
+        float getPitch();
+        void setPitch(float val);
+
+        void initMouseMoveCallback();
 
         glm::mat4 getCameraMatrix();
         
@@ -25,6 +31,10 @@ class Camera{
         glm::vec3 cameraFront;
         glm::vec3 cameraUp;
         float cameraSpeed;
+        float yaw = -89.0f;
+        float pitch = 0.f;
+
+        void mouseMove(GLFWwindow* window, double xPos, double yPos);
 };
 
 

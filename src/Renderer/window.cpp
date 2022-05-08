@@ -1,5 +1,6 @@
 #include <iostream>
 #include "window.h"
+#include "camera.h"
 
 namespace Renderer{
 
@@ -7,6 +8,8 @@ namespace Renderer{
         mWidth = width;
         mHeight = heigth;
         mTitle = title;
+        mLastMouseXPos = mWidth / 2.f;
+        mLastMouseYPos = mHeight / 2.f;
     }
 
     bool Window::init(){
@@ -65,6 +68,32 @@ namespace Renderer{
             }
         });
     }
+
+    void Window::setMouseCallback(){
+        glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPosCallback(pWindow, [](GLFWwindow* window, double xPos, double yPos){
+            if(auto self = static_cast<Window*>(glfwGetWindowUserPointer(window))){
+                float xOffset = xPos - self->getLastMouseXPosition();
+                float yOffset = yPos - self->getLastMouseYPosition();
+                self->setLastMouseXPosition(xPos);
+                self->setLastMouseYPosition(yPos);
+
+                float sensivity = 0.1f;
+                xOffset *= sensivity;
+                yOffset *= sensivity * -1.f;
+
+                auto cam = self->getCamera();
+                if (!cam) {
+                    std::cerr << "Couldn't get camera";
+                    return;
+                }
+                cam->setYaw(cam->getYaw() + xOffset);
+                cam->setPitch(cam->getPitch() + yOffset);
+            }
+        });
+        
+    }
+
     void Window::setSizeCallback(){
         glfwSetWindowSizeCallback(pWindow, [](GLFWwindow* window, int width, int height){
             auto& self = *static_cast<Window*>(glfwGetWindowUserPointer(window));
@@ -72,5 +101,10 @@ namespace Renderer{
             self.setHeight(height);
             glViewport(0, 0, self.getWidth(), self.getHeight());
         });
+    }
+
+    void Window::setCamera(Camera* camera){
+        pCamera = camera;
+        setMouseCallback();
     }
 }
