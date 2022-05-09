@@ -1,5 +1,5 @@
 #include "shaderProgram.h"
-#include <iostream>
+#include "utils/log.h"
 #include <fstream>
 #include <sstream>
 
@@ -8,14 +8,14 @@ namespace Renderer{
         GLuint vertexShaderID;
         std::string vertexShaderCode = loadShader(vertexShader.c_str());
         if(!createShader(GL_VERTEX_SHADER, vertexShaderCode, vertexShaderID)){
-            std::cerr << "Vertex shader compile error" <<std::endl;
+            LOG_ERROR("Vertex shader compile error");
             glDeleteShader(vertexShaderID);
             return;
         }
         GLuint fragmentShaderID;
         std::string fragmentShaderCode = loadShader(fragmentShader.c_str());
         if(!createShader(GL_FRAGMENT_SHADER, fragmentShaderCode, fragmentShaderID)){
-            std::cerr << "Fragment shader compile error" <<std::endl;
+            LOG_ERROR("Fragment shader compile error");
             glDeleteShader(fragmentShaderID);
             return;
         }
@@ -29,7 +29,7 @@ namespace Renderer{
         if(!success){
             GLchar infolog[1024];
             glGetShaderInfoLog(programID, 1024, nullptr, infolog);
-            std::cerr << "ERROR::SHADER: Link time error\n" << infolog << std::endl;
+            LOG_ERROR("ERROR::SHADER: Link time error\n{0}", infolog );
             return;
         }else{
             isCompiled = true;
@@ -51,7 +51,7 @@ namespace Renderer{
             shaderFile.close();
             shaderCode = shaderStream.str();
         } catch (std::ifstream::failure e){
-            std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+            LOG_ERROR("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ");
         }
         return shaderCode;
     }
@@ -71,7 +71,7 @@ namespace Renderer{
         if(!success){
             GLchar infolog[1024];
             glGetShaderInfoLog(shaderId, 1024, nullptr, infolog);
-            std::cerr << "ERROR::SHADER: Compile time error\n" << infolog << std::endl;
+            LOG_ERROR("ERROR::SHADER: Compile time error\n{0}", infolog);
             return false;
         }
         return true;

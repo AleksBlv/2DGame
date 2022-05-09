@@ -4,6 +4,7 @@
 #include "Renderer/texture.h"
 #include "Renderer/model.h"
 #include "Renderer/camera.h"
+#include "utils/log.h"
 
 #include "../external/glm/glm.hpp"
 #include "../external/glm/gtc/matrix_transform.hpp"
@@ -124,7 +125,7 @@ int main(void)
 {
     Renderer::Window window(800, 600, "Triangle");
     if(!window.init()){
-        std::cerr << "failed to create window" <<std::endl;
+        LOG_ERROR("failed to create window");
         return -1;
     }
 
@@ -138,7 +139,7 @@ int main(void)
     std::string fragPath = "assets/frag.glsl";
     Renderer::ShaderProgram shaderProgram(vertPath, fragPath);
     if(!shaderProgram.getCompiledStatus()){
-        std::cerr << "Can't create shader program" <<std::endl;
+        LOG_ERROR("Can't create shader program");
         return -1;
     }
 

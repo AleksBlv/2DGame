@@ -1,4 +1,4 @@
-#include <iostream>
+#include "utils/log.h"
 #include "texture.h"
 #include <glad/glad.h>
 #include "../fromGit/stb_image.h"
@@ -24,7 +24,7 @@ Texture::Texture(const std::string& filePath)
         glGenerateMipmap(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0);
     }else{
-        std::cerr<< "Unable to load texture" <<std::endl;
+        LOG_ERROR("Unable to load texture");
     }
 
     stbi_image_free(localBuffer);

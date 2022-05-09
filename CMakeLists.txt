@@ -19,7 +19,11 @@ add_executable(${PROJECT_NAME}
     src/Renderer/model.cpp
     src/Renderer/camera.h
     src/Renderer/camera.cpp
+    src/utils/log.h
 )
+
+include_directories(src)
+
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -34,4 +38,7 @@ target_link_libraries(${PROJECT_NAME} glad)
 
 add_subdirectory(external/glm)
 target_link_libraries(${PROJECT_NAME} glm)
+
+add_subdirectory(external/spdlog)
+target_link_libraries(${PROJECT_NAME} spdlog)
 

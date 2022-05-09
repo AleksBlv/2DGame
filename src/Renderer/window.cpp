@@ -1,6 +1,6 @@
-#include <iostream>
 #include "window.h"
 #include "camera.h"
+#include "utils/log.h"
 
 namespace Renderer{
 
@@ -14,7 +14,7 @@ namespace Renderer{
 
     bool Window::init(){
         if (!glfwInit()){
-            std::cerr << "Couldn't init glfw!" <<std::endl;
+            LOG_ERROR("Couldn't init glfw!");
             return false;
         }
 
@@ -26,7 +26,7 @@ namespace Renderer{
         pWindow = glfwCreateWindow(mWidth, mHeight, mTitle, nullptr, nullptr);
 
         if (!pWindow){
-            std::cerr << "Couldn't create window!" <<std::endl;
+            LOG_ERROR("Couldn't create window!");
             glfwTerminate();
             return -1;
         }
@@ -38,12 +38,11 @@ namespace Renderer{
 
         glfwMakeContextCurrent(pWindow);
         if(!gladLoadGL()){
-            std::cerr << "Unable to initialize glad"<<std::endl;
+            LOG_ERROR("Unable to initialize glad");
             return -1;
         }
     
-    std::cout << "OpenGL version: " << GLVersion.major <<"."<<GLVersion.minor<<std::endl;
-
+        LOG_INFO("OpenGL version: {0:d}.{1:d}", GLVersion.major, GLVersion.minor);
         return true;
     }
 
@@ -84,7 +83,7 @@ namespace Renderer{
 
                 auto cam = self->getCamera();
                 if (!cam) {
-                    std::cerr << "Couldn't get camera";
+                    LOG_ERROR("Couldn't get camera");
                     return;
                 }
                 cam->setYaw(cam->getYaw() + xOffset);

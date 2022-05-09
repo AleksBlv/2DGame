@@ -1,7 +1,6 @@
 #include "camera.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 float DEFAUL_SPEED = 2.f;
 
