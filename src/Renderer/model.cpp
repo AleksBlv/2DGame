@@ -78,4 +78,8 @@ void Model::move(float x, float y, float z){
     transformMatrix = glm::translate(transformMatrix, glm::vec3(x, y, z));
 }
 
+void Model::scale(float x, float y, float z){
+    transformMatrix = glm::scale(transformMatrix, glm::vec3(x, y, z));
+}
+
 }

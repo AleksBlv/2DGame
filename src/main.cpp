@@ -171,6 +171,7 @@ int main(void)
     Renderer::Model lightCube;
     lightCube.init(d, 36);
     lightCube.move(-1.7f,  3.0f, -7.5f);
+    lightCube.scale(0.2f, 0.2f, 0.2f);
 
 
 
@@ -215,28 +216,16 @@ int main(void)
         shaderProgram.use(); 
 
         glm::vec3 lightColor(1.f, 0.2f, 0.2f);
-        GLuint lightColorLoc = glGetUniformLocation(shaderProgram.getProgramID(), "lightColor");
-        glUniform3f(lightColorLoc, lightColor.x, lightColor.y, lightColor.z);
 
+        shaderProgram.setUniformLocation3f(lightColor, "lightColor");
         auto view = camera.getCameraMatrix();
-        GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-        GLuint projectionLoc = glGetUniformLocation(shaderProgram.getProgramID(), "projection");
-        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
+        shaderProgram.setUniformLocationMat4fv(view, "view");
+        shaderProgram.setUniformLocationMat4fv(projection, "projection");
         cube.draw(shaderProgram.getProgramID());
 
         lightShaderProgram.use();
-        
-
-
-        GLuint viewLocLight = glGetUniformLocation(lightShaderProgram.getProgramID(), "view");
-        glUniformMatrix4fv(viewLocLight, 1, GL_FALSE, glm::value_ptr(view));
-
-        GLuint projectionLocLight = glGetUniformLocation(lightShaderProgram.getProgramID(), "projection");
-        glUniformMatrix4fv(projectionLocLight, 1, GL_FALSE, glm::value_ptr(projection));
-
+        lightShaderProgram.setUniformLocationMat4fv(view, "view");
+        lightShaderProgram.setUniformLocationMat4fv(projection, "projection");
         lightCube.draw(lightShaderProgram.getProgramID());
 
         // for(auto& model: models){

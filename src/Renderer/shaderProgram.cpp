@@ -2,6 +2,7 @@
 #include "utils/log.h"
 #include <fstream>
 #include <sstream>
+#include "../external/glm/gtc/type_ptr.hpp"
 
 namespace Renderer{
     ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader){
@@ -97,5 +98,19 @@ namespace Renderer{
         shaderProgram.programID = 0;
         shaderProgram.isCompiled = false;
         return *this;
+    }
+    void ShaderProgram::setUniformLocation3f(glm::vec3 data, const std::string& location){
+        GLuint shaderLocation = glGetUniformLocation(programID, location.c_str());
+        glUniform3f(shaderLocation, data.x, data.y, data.z);
+    }
+
+    void ShaderProgram::setUniformLocation1f(float data, const std::string& location){
+        GLuint shaderLocation = glGetUniformLocation(programID, location.c_str());
+        glUniform1f(shaderLocation, data);
+    }
+
+    void ShaderProgram::setUniformLocationMat4fv(glm::mat4 data, const std::string& location){
+        GLuint shaderLocation = glGetUniformLocation(programID, location.c_str());
+        glUniformMatrix4fv(shaderLocation, 1, GL_FALSE, glm::value_ptr(data));
     }
 }

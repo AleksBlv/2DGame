@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <vector>
 #include <string> 
+#include <glm/glm.hpp>
 
 namespace Renderer{
     class ShaderProgram{
@@ -12,6 +13,10 @@ namespace Renderer{
             ShaderProgram& operator=(const ShaderProgram&) = delete;
             ShaderProgram(ShaderProgram&& shaderProgram) noexcept;
             ShaderProgram& operator=(ShaderProgram&& shaderProgram) noexcept;
+
+            void setUniformLocation3f(glm::vec3 data, const std::string& location);
+            void setUniformLocation1f(float data, const std::string& location);
+            void setUniformLocationMat4fv(glm::mat4 data, const std::string& location);
 
             ~ShaderProgram();
             bool getCompiledStatus() const {return isCompiled; }
