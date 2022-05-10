@@ -11,7 +11,7 @@ namespace Renderer{
         void unbindTexture();
         ~Texture() = default;
     private:
-        unsigned int textureID;
+        unsigned int textureID = 0;
         unsigned char* localBuffer;
         int textureWidth, textureHeight, textureBBP;
     };

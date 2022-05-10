@@ -31,8 +31,10 @@ Texture::Texture(const std::string& filePath)
 }
 
 void Texture::bindTexture(unsigned int slot){
-    glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    if(textureID !=0){
+        glActiveTexture(GL_TEXTURE0 + slot);
+        glBindTexture(GL_TEXTURE_2D, textureID);
+    }
 }
 
 void Texture::unbindTexture(){

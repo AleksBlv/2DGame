@@ -12,6 +12,7 @@ class Model{
 
         void init(const std::vector<float>& data, int size);
         void setTexture(Texture* t);
+        void setColor(glm::vec3 color);
 
         unsigned int getTexture();
         void prepare(unsigned int shaderId);
@@ -24,6 +25,7 @@ class Model{
         void genBuffers();
 
         Texture* texture = nullptr;
+        glm::vec3 color;
         std::vector<float> verticies;
         int vertCount = 0;
         unsigned int vao=0, vbo=0;

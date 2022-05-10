@@ -6,7 +6,7 @@
 namespace Renderer{
 
 Model::Model(){
-
+    color = glm::vec3(0.0f, 0.0f, 1.0f);
 }
 
 void Model::init(const std::vector<float>& data, int size){
@@ -41,7 +41,17 @@ void Model::prepare(unsigned int shaderId){
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-    texture->bindTexture(0);
+
+    GLuint applyTextureLocation = glGetUniformLocation(shaderId, "applyTexture");
+    if(texture){
+        texture->bindTexture(0);
+        glUniform1f(applyTextureLocation, 1.0f);
+    } else {
+        glUniform1f(applyTextureLocation, 0.0f);
+    }
+
+    GLuint objectColorLocation = glGetUniformLocation(shaderId, "objectColor");
+    glUniform3f(objectColorLocation, color.x, color.y, color.z);
 
     GLuint modelLoc = glGetUniformLocation(shaderId, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transformMatrix));

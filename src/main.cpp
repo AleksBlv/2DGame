@@ -143,6 +143,14 @@ int main(void)
         return -1;
     }
 
+    std::string lightVertPath = "assets/lightVert.glsl";
+    std::string lightFragPath = "assets/lightFrag.glsl";
+    Renderer::ShaderProgram lightShaderProgram(lightVertPath, lightFragPath);
+    if(!lightShaderProgram.getCompiledStatus()){
+        LOG_ERROR("Can't create shader program");
+        return -1;
+    }
+
     std::vector<float> d;
     for(auto x: vertices){
         d.push_back(x);
@@ -156,6 +164,14 @@ int main(void)
         obj->move(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
         models.push_back(obj);
     }
+
+    Renderer::Model cube;
+    cube.init(d, 36);
+
+    Renderer::Model lightCube;
+    lightCube.init(d, 36);
+    lightCube.move(-1.7f,  3.0f, -7.5f);
+
 
 
     glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0);
@@ -172,17 +188,6 @@ int main(void)
     projection = glm::perspective(glm::radians(45.f), (float)(window.getWidth()/window.getHeight()), 0.1f, 100.f);
     glEnable(GL_DEPTH_TEST);
 
-    //camera
-    // glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    // glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    // glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-    // glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f); 
-    // glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-    // glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-    // glm::mat4 view;
-    // view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), 
-  	// 	   glm::vec3(0.0f, 0.0f, 0.0f), 
-  	// 	   glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -209,17 +214,35 @@ int main(void)
         
         shaderProgram.use(); 
 
+        glm::vec3 lightColor(1.f, 0.2f, 0.2f);
+        GLuint lightColorLoc = glGetUniformLocation(shaderProgram.getProgramID(), "lightColor");
+        glUniform3f(lightColorLoc, lightColor.x, lightColor.y, lightColor.z);
+
         auto view = camera.getCameraMatrix();
         GLuint viewLoc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-        
         GLuint projectionLoc = glGetUniformLocation(shaderProgram.getProgramID(), "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        for(auto& model: models){
-            model->rotate(1.f, 1.f, 1.f, 1.f);
-            model->draw(shaderProgram.getProgramID());
-        }
+
+        cube.draw(shaderProgram.getProgramID());
+
+        lightShaderProgram.use();
+        
+
+
+        GLuint viewLocLight = glGetUniformLocation(lightShaderProgram.getProgramID(), "view");
+        glUniformMatrix4fv(viewLocLight, 1, GL_FALSE, glm::value_ptr(view));
+
+        GLuint projectionLocLight = glGetUniformLocation(lightShaderProgram.getProgramID(), "projection");
+        glUniformMatrix4fv(projectionLocLight, 1, GL_FALSE, glm::value_ptr(projection));
+
+        lightCube.draw(lightShaderProgram.getProgramID());
+
+        // for(auto& model: models){
+        //     model->rotate(1.f, 1.f, 1.f, 1.f);
+        //     model->draw(shaderProgram.getProgramID());
+        // }
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window.get());
