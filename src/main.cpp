@@ -12,7 +12,7 @@
 
 //TODO: copy assets folder into the build folder
 
-float vertices[] = {
+/*float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -54,6 +54,51 @@ float vertices[] = {
      0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+};*/
+
+float vertices[] = {
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f
+
 };
 
 GLfloat points[] = {
@@ -131,7 +176,7 @@ int main(void)
 
     Renderer::Texture myTexture("assets/web_cat.jpeg");
     
-    glClearColor(0.5, 0.5, 0.5, 0);
+    glClearColor(0.1, 0.1, 0.1, 0);
 
     //std::string vertexShader(vertex_Shader);
     //std::string fragmentShader(fragment_Shader);
@@ -156,17 +201,10 @@ int main(void)
         d.push_back(x);
     }
 
-    std::vector<std::shared_ptr<Renderer::Model>> models;
-    for (int i=0; i<10; i++){
-        auto obj = std::make_shared<Renderer::Model>();
-        obj->init(d, 36);
-        obj->setTexture(&myTexture);
-        obj->move(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
-        models.push_back(obj);
-    }
 
     Renderer::Model cube;
     cube.init(d, 36);
+    cube.setTexture(&myTexture);
 
     Renderer::Model lightCube;
     lightCube.init(d, 36);
@@ -215,18 +253,20 @@ int main(void)
         
         shaderProgram.use(); 
 
-        glm::vec3 lightColor(1.f, 0.2f, 0.2f);
+        glm::vec3 lightColor(1.f, 1.0f, 1.0f);
 
         shaderProgram.setUniformLocation3f(lightColor, "lightColor");
         auto view = camera.getCameraMatrix();
         shaderProgram.setUniformLocationMat4fv(view, "view");
         shaderProgram.setUniformLocationMat4fv(projection, "projection");
-        cube.draw(shaderProgram.getProgramID());
+        shaderProgram.setUniformLocation3f(lightCube.getPosition(), "lightPos");
+        cube.draw(&shaderProgram);
 
         lightShaderProgram.use();
+        
         lightShaderProgram.setUniformLocationMat4fv(view, "view");
         lightShaderProgram.setUniformLocationMat4fv(projection, "projection");
-        lightCube.draw(lightShaderProgram.getProgramID());
+        lightCube.draw(&lightShaderProgram);
 
         // for(auto& model: models){
         //     model->rotate(1.f, 1.f, 1.f, 1.f);

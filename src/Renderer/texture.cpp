@@ -9,6 +9,8 @@ Texture::Texture(const std::string& filePath)
                 :localBuffer(nullptr), textureBBP(0), 
                 textureWidth(0), textureHeight(0),
                 textureID(0){
+    
+    stbi_set_flip_vertically_on_load(true);
     localBuffer = stbi_load(filePath.c_str(), &textureWidth, &textureHeight, &textureBBP, 4);
 
     glGenTextures(1, &textureID);

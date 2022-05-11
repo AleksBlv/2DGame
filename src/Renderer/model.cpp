@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include "../external/glm/gtc/matrix_transform.hpp"
 #include "../external/glm/gtc/type_ptr.hpp"
+#include "../external/glm/gtx/matrix_decompose.hpp"
+#include "Renderer/shaderProgram.h"
 
 namespace Renderer{
 
@@ -20,11 +22,13 @@ void Model::init(const std::vector<float>& data, int size){
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * verticies.size(), verticies.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6 * sizeof(float)));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -36,13 +40,14 @@ void Model::setTexture(Texture* t){
     texture = t;
 }
 
-void Model::prepare(unsigned int shaderId){
+void Model::prepare(ShaderProgram* shaderProgram){
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
-    GLuint applyTextureLocation = glGetUniformLocation(shaderId, "applyTexture");
+    GLuint applyTextureLocation = glGetUniformLocation(shaderProgram->getProgramID(), "applyTexture");
     if(texture){
         texture->bindTexture(0);
         glUniform1f(applyTextureLocation, 1.0f);
@@ -50,15 +55,12 @@ void Model::prepare(unsigned int shaderId){
         glUniform1f(applyTextureLocation, 0.0f);
     }
 
-    GLuint objectColorLocation = glGetUniformLocation(shaderId, "objectColor");
-    glUniform3f(objectColorLocation, color.x, color.y, color.z);
-
-    GLuint modelLoc = glGetUniformLocation(shaderId, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transformMatrix));
+    shaderProgram->setUniformLocation3f(color, "objectColor");
+    shaderProgram->setUniformLocationMat4fv(transformMatrix, "model");
 }
 
-void Model::draw(unsigned int  shaderId){
-    prepare(shaderId);
+void Model::draw(ShaderProgram* shaderProgram){
+    prepare(shaderProgram);
     glDrawArrays(GL_TRIANGLES, 0, vertCount);
 }
 
@@ -80,6 +82,16 @@ void Model::move(float x, float y, float z){
 
 void Model::scale(float x, float y, float z){
     transformMatrix = glm::scale(transformMatrix, glm::vec3(x, y, z));
+}
+
+glm::vec3 Model::getPosition(){
+    glm::vec3 scale;
+    glm::quat rotation;
+    glm::vec3 translation;
+    glm::vec3 skew;
+    glm::vec4 perspective;
+    glm::decompose(transformMatrix, scale, rotation, translation, skew,perspective);
+    return translation;
 }
 
 }

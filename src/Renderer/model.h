@@ -4,7 +4,7 @@
 #include "texture.h"
 
 namespace Renderer{
-
+class ShaderProgram;
 class Model{
     public:
         Model();
@@ -15,12 +15,14 @@ class Model{
         void setColor(glm::vec3 color);
 
         unsigned int getTexture();
-        void prepare(unsigned int shaderId);
-        void draw(unsigned int shaderId);
+        void prepare(ShaderProgram* shaderProgram);
+        void draw(ShaderProgram* shaderProgram);
         void unbind();
         void rotate(float x, float y, float z, float grad);
         void move(float x, float y, float z);
         void scale(float x, float y, float z);
+
+        glm::vec3 getPosition();
 
     private:
         void genBuffers();
