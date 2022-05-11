@@ -22,6 +22,16 @@ add_executable(${PROJECT_NAME}
     src/utils/log.h
 )
 
+set(link_src "${CMAKE_SOURCE_DIR}/Assets")
+set(link_dst "${CMAKE_CURRENT_BINARY_DIR}/Assets")
+add_custom_command( 
+    TARGET ${PROJECT_NAME} 
+    POST_BUILD COMMAND ${CMAKE_COMMAND} 
+        -E create_symlink ${link_src} ${link_dst} 
+    DEPENDS ${link_dst} 
+    COMMENT "symbolic link ${link_src} => ${link_dst}" 
+) 
+
 include_directories(src)
 
 
