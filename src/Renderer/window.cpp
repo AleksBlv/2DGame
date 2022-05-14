@@ -30,6 +30,8 @@ namespace Renderer{
             glfwTerminate();
             return -1;
         }
+        glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        cursorEnabled = false;
 
         glfwSetWindowUserPointer(pWindow, this);
 
@@ -65,13 +67,19 @@ namespace Renderer{
             if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
                 glfwSetWindowShouldClose(pWindow, GLFW_TRUE);
             }
+            if(key == GLFW_KEY_Q && action == GLFW_PRESS){
+                if(auto self = static_cast<Window*>(glfwGetWindowUserPointer(pWindow))){
+                    self->toggleCursor();
+                }
+            }
         });
     }
 
     void Window::setMouseCallback(){
-        glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwSetCursorPosCallback(pWindow, [](GLFWwindow* window, double xPos, double yPos){
             if(auto self = static_cast<Window*>(glfwGetWindowUserPointer(window))){
+                if(self->isCursorEnabled())return;
+
                 float xOffset = xPos - self->getLastMouseXPosition();
                 float yOffset = yPos - self->getLastMouseYPosition();
                 self->setLastMouseXPosition(xPos);
@@ -105,5 +113,15 @@ namespace Renderer{
     void Window::setCamera(Camera* camera){
         pCamera = camera;
         setMouseCallback();
+    }
+
+    void Window::toggleCursor(){
+        if(cursorEnabled){
+            glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            cursorEnabled = false;
+        } else {
+            glfwSetInputMode(pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            cursorEnabled = true;
+        }
     }
 }

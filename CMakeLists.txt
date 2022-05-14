@@ -52,3 +52,27 @@ target_link_libraries(${PROJECT_NAME} glm)
 add_subdirectory(external/spdlog)
 target_link_libraries(${PROJECT_NAME} spdlog)
 
+set(IMGUI_INCLUDES
+ 		external/imgui/imgui.h
+ 		external/imgui/backends/imgui_impl_glfw.h
+ 		external/imgui/backends/imgui_impl_opengl3.h
+    )
+
+set(IMGUI_SOURCES
+ 		external/imgui/imgui.cpp
+ 		external/imgui/backends/imgui_impl_glfw.cpp
+ 		external/imgui/backends/imgui_impl_opengl3.cpp
+ 		external/imgui/imgui_demo.cpp
+ 		external/imgui/imgui_draw.cpp
+ 		external/imgui/imgui_tables.cpp
+ 		external/imgui/imgui_widgets.cpp
+    )
+
+
+add_library(ImGui STATIC ${IMGUI_INCLUDES} ${IMGUI_SOURCES})
+
+target_include_directories(ImGui PUBLIC external)
+target_include_directories(ImGui PUBLIC external/imgui)
+target_link_libraries(ImGui PRIVATE glad glfw)
+target_link_libraries(${PROJECT_NAME} ImGui)
+

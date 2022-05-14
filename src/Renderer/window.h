@@ -24,7 +24,10 @@ namespace Renderer{
             inline void setLastMouseYPosition(float yPos){mLastMouseYPos = yPos;}
             void setCamera(Renderer::Camera* camera);
             Camera* getCamera(){return pCamera;};
+            void toggleCursor();
+            const bool isCursorEnabled() const {return cursorEnabled;}
         private:
+            bool cursorEnabled = false;
             int mWidth = 0;
             int mHeight = 0;
             float mLastMouseXPos = 0.0;
