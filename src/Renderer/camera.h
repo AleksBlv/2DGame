@@ -16,14 +16,15 @@ class Camera{
         void setCameraPos(glm::vec3 pos);
         void setCameraFront(glm::vec3 front);
         void setCameraUp(glm::vec3 up);
-        float getYaw();
+        float getYaw() const;
         void setYaw(float val);
-        float getPitch();
+        float getPitch() const;
         void setPitch(float val);
 
         void initMouseMoveCallback();
 
         glm::mat4 getCameraMatrix();
+        glm::vec3 getCameraPosition() const;
         
     private:
         Window* window = nullptr;

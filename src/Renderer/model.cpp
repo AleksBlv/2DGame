@@ -94,4 +94,12 @@ glm::vec3 Model::getPosition(){
     return translation;
 }
 
+void Model::setColor(float r, float g, float b){
+    color = glm::vec3(r/255.f, g/255.f, b/255.f);
+}
+
+void Model::setColor(glm::vec3 val){
+    color = val;
+}
+
 }

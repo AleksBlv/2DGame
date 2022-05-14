@@ -12,7 +12,8 @@ class Model{
 
         void init(const std::vector<float>& data, int size);
         void setTexture(Texture* t);
-        void setColor(glm::vec3 color);
+        void setColor(glm::vec3 val);
+        void setColor(float r, float g, float b);
 
         unsigned int getTexture();
         void prepare(ShaderProgram* shaderProgram);

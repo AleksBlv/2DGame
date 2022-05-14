@@ -67,14 +67,14 @@ void Camera::move(float deltaTime){
     }
 }
 
-float Camera::getYaw(){
+float Camera::getYaw() const {
     return yaw;
 }
 void Camera::setYaw(float val){
     
     yaw = val;
 }
-float Camera::getPitch(){
+float Camera::getPitch() const {
     return pitch;
 }
 void Camera::setPitch(float val){
@@ -83,5 +83,9 @@ void Camera::setPitch(float val){
     if (pitch < -89.f) pitch = -89.f;
 }
 
+
+glm::vec3 Camera::getCameraPosition() const {
+    return cameraPos;
+}
 
 }

@@ -204,7 +204,8 @@ int main(void)
 
     Renderer::Model cube;
     cube.init(d, 36);
-    cube.setTexture(&myTexture);
+    cube.setColor(102.f, 178.f, 255.f);
+    //cube.setTexture(&myTexture);
 
     Renderer::Model lightCube;
     lightCube.init(d, 36);
@@ -260,6 +261,7 @@ int main(void)
         shaderProgram.setUniformLocationMat4fv(view, "view");
         shaderProgram.setUniformLocationMat4fv(projection, "projection");
         shaderProgram.setUniformLocation3f(lightCube.getPosition(), "lightPos");
+        shaderProgram.setUniformLocation3f(camera.getCameraPosition(), "cameraPos");
         cube.draw(&shaderProgram);
 
         lightShaderProgram.use();
