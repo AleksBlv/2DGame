@@ -7,7 +7,7 @@ namespace Renderer{
 class ShaderProgram;
 class Model{
     public:
-        Model();
+        Model(const std::string& id);
         ~Model() = default;
 
         void init(const std::vector<float>& data, int size);
@@ -22,12 +22,14 @@ class Model{
         void rotate(float x, float y, float z, float grad);
         void move(float x, float y, float z);
         void scale(float x, float y, float z);
+        void setPosition(float x, float y, float z);
 
         glm::vec3 getPosition();
+        std::string getID(){return ID;}
 
     private:
         void genBuffers();
-
+        std::string ID = "";
         Texture* texture = nullptr;
         glm::vec3 color;
         std::vector<float> verticies;

@@ -4,17 +4,14 @@
 #include "Renderer/texture.h"
 #include "Renderer/model.h"
 #include "Renderer/camera.h"
+#include "Renderer/debugWindow.h"
 #include "utils/log.h"
 
 #include "../external/glm/glm.hpp"
 #include "../external/glm/gtc/matrix_transform.hpp"
 #include "../external/glm/gtc/type_ptr.hpp"
 
-#include "imgui/imgui.h"
-#include "imgui/backends/imgui_impl_opengl3.h"
-#include "imgui/backends/imgui_impl_glfw.h"
 
-void updateImGui(Renderer::Window* window);
 
 /*float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -177,7 +174,7 @@ int main(void)
         LOG_ERROR("failed to create window");
         return -1;
     }
-
+    std::vector<Renderer::Model*> modelVector;
     Renderer::Texture myTexture("assets/web_cat.jpeg");
     
     glClearColor(0.1, 0.1, 0.1, 0);
@@ -206,15 +203,17 @@ int main(void)
     }
 
 
-    Renderer::Model cube;
+    Renderer::Model cube("cube");
     cube.init(d, 36);
     cube.setColor(102.f, 178.f, 255.f);
     //cube.setTexture(&myTexture);
+    modelVector.push_back(&cube);
 
-    Renderer::Model lightCube;
+    Renderer::Model lightCube("lightSrc");
     lightCube.init(d, 36);
     lightCube.move(-1.7f,  3.0f, -7.5f);
     lightCube.scale(0.2f, 0.2f, 0.2f);
+    modelVector.push_back(&lightCube);
 
 
 
@@ -244,10 +243,8 @@ int main(void)
     int fpsCap = 60;
     float fpsDelay = (1000.f / fpsCap) / 1000.f;
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window.get(), true);
-    ImGui_ImplOpenGL3_Init();
+    Renderer::debugWindow dbWin(&window);
+    dbWin.setModelsVector(modelVector);
 
     while (!window.shouldClose())
     {
@@ -285,7 +282,7 @@ int main(void)
         //     model->draw(shaderProgram.getProgramID());
         // }
 
-        updateImGui(&window);
+        dbWin.update();
         /* Swap front and back buffers */
         
         glfwSwapBuffers(window.get());
@@ -296,18 +293,4 @@ int main(void)
 
     window.terminate();
     return 0;
-}
-
-void updateImGui(Renderer::Window* window){
-    ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize.x = window->getWidth();
-    io.DisplaySize.y = window->getHeight();
-    io.DisplayFramebufferScale.x = 2;
-    io.DisplayFramebufferScale.y = 2;
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui::NewFrame();
-    
-    ImGui::ShowDemoWindow();
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

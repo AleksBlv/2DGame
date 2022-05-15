@@ -7,7 +7,7 @@
 
 namespace Renderer{
 
-Model::Model(){
+Model::Model(const std::string& id): ID(id){
     color = glm::vec3(0.0f, 0.0f, 1.0f);
 }
 
@@ -82,6 +82,12 @@ void Model::move(float x, float y, float z){
 
 void Model::scale(float x, float y, float z){
     transformMatrix = glm::scale(transformMatrix, glm::vec3(x, y, z));
+}
+
+void Model::setPosition(float x, float y, float z){
+    transformMatrix[3][0] = x;
+    transformMatrix[3][1] = y;
+    transformMatrix[3][2] = z;
 }
 
 glm::vec3 Model::getPosition(){

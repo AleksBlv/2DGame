@@ -20,6 +20,8 @@ add_executable(${PROJECT_NAME}
     src/Renderer/camera.h
     src/Renderer/camera.cpp
     src/utils/log.h
+    src/Renderer/debugWindow.h
+    src/Renderer/debugWindow.cpp
 )
 
 set(link_src "${CMAKE_SOURCE_DIR}/Assets")
