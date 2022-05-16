@@ -71,11 +71,11 @@ void debugWindow::testWindow(){
     if(models.size()){
         ImGui::Text(models[selected]->getID().c_str());
         auto position = models[selected]->getPosition();
-        float pos[] = {position.x, position.y, position.z};
+        float pos[] = {position.x, position.y, position.z, 1.0};
         
-        ImGui::SliderFloat3("Position", pos , -100.f, 100.f, "%.3f", ImGuiSliderFlags_Logarithmic);
-        abs(pos[0] - position.x) > 0.1 ? (pos[0] < position.x ? pos[0] = position.x - 0.1f : pos[0] = position.x + 0.1f) : pos[0] = pos[0];
+        ImGui::DragFloat3("Position", pos ,0.01f, -100.f, 100.f, "%.2f");
         models[selected]->setPosition(pos[0], pos[1], pos[2]);
+
     }
 
     ImGui::EndListBox();
