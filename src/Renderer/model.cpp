@@ -41,6 +41,7 @@ void Model::setTexture(Texture* t){
 }
 
 void Model::prepare(ShaderProgram* shaderProgram){
+    glUseProgram(shaderProgram->getProgramID());
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glEnableVertexAttribArray(0);
@@ -62,6 +63,7 @@ void Model::prepare(ShaderProgram* shaderProgram){
 void Model::draw(ShaderProgram* shaderProgram){
     prepare(shaderProgram);
     glDrawArrays(GL_TRIANGLES, 0, vertCount);
+    unbind();
 }
 
 void Model::unbind(){
@@ -70,6 +72,7 @@ void Model::unbind(){
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     texture->unbindTexture();
+    glUseProgram(0);
 }
 
 void Model::rotate(float x, float y, float z, float grad){
@@ -91,13 +94,22 @@ void Model::setPosition(float x, float y, float z){
 }
 
 glm::vec3 Model::getPosition(){
-    glm::vec3 scale;
-    glm::quat rotation;
-    glm::vec3 translation;
-    glm::vec3 skew;
-    glm::vec4 perspective;
-    glm::decompose(transformMatrix, scale, rotation, translation, skew,perspective);
-    return translation;
+    return glm::vec3(transformMatrix[3]);
+}
+
+Rotation Model::getRotation(){
+    return rotation;
+}
+
+void Model::setRotation(float x, float y, float z, float grad){
+    const double epsilon = 1e-5;
+    if(std::abs(rotation.angel - 0.f) > epsilon)
+        transformMatrix = glm::rotate(transformMatrix, glm::radians(-rotation.angel), glm::vec3(rotation.x, rotation.y, rotation.z));
+    rotation.x = x;
+    rotation.y = y;
+    rotation.z = z;
+    rotation.angel = grad;
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.angel), glm::vec3(rotation.x, rotation.y, rotation.z));
 }
 
 void Model::setColor(float r, float g, float b){
