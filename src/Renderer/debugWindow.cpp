@@ -70,12 +70,18 @@ void debugWindow::testWindow(){
 
     if(models.size()){
         ImGui::Text(models[selected]->getID().c_str());
+
+        auto rotation = models[selected]->getRotation();
+        float rot[] = {rotation.angelX, rotation.angelY, rotation.angelZ};
+        ImGui::DragFloat3("Rotation", rot , 1.0f, -360.f, 360.f, "%.1f");
+        models[selected]->setRotation(rot[0], rot[1], rot[2]);
+
         auto position = models[selected]->getPosition();
         float pos[] = {position.x, position.y, position.z, 1.0};
-        
         ImGui::DragFloat3("Position", pos ,0.01f, -100.f, 100.f, "%.2f");
         models[selected]->setPosition(pos[0], pos[1], pos[2]);
 
+        
     }
 
     ImGui::EndListBox();

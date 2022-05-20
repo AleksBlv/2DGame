@@ -4,11 +4,11 @@
 #include "texture.h"
 
 namespace Renderer{
+    const double epsilon = 1e-10;
 struct Rotation{
-    float x = 0.f;
-    float y = 0.f;
-    float z = 0.f;
-    float angel = 0.f;
+    float angelX = 0.f;
+    float angelY = 0.f;
+    float angelZ = 0.f;
 };
 class ShaderProgram;
 class Model{
@@ -29,7 +29,12 @@ class Model{
         void move(float x, float y, float z);
         void scale(float x, float y, float z);
         void setPosition(float x, float y, float z);
-        void setRotation(float x, float y, float z, float grad);
+
+        void setRotationX(float grad);
+        void setRotationY(float grad);
+        void setRotationZ(float grad);
+
+        void setRotation(float x, float y, float z);
 
         Rotation getRotation();
         glm::vec3 getPosition();
@@ -38,6 +43,7 @@ class Model{
 
     private:
         void genBuffers();
+        float normalizeGrad(float grad);
         std::string ID = "";
         Texture* texture = nullptr;
         glm::vec3 color;

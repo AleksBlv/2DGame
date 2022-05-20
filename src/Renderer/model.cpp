@@ -101,15 +101,43 @@ Rotation Model::getRotation(){
     return rotation;
 }
 
-void Model::setRotation(float x, float y, float z, float grad){
-    const double epsilon = 1e-5;
-    if(std::abs(rotation.angel - 0.f) > epsilon)
-        transformMatrix = glm::rotate(transformMatrix, glm::radians(-rotation.angel), glm::vec3(rotation.x, rotation.y, rotation.z));
-    rotation.x = x;
-    rotation.y = y;
-    rotation.z = z;
-    rotation.angel = grad;
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.angel), glm::vec3(rotation.x, rotation.y, rotation.z));
+void Model::setRotationX(float grad){
+    if (grad > 360.f){
+        grad = normalizeGrad(grad);
+    }
+    float rotateAngel = grad - rotation.angelX;
+    if(std::abs(rotateAngel - 0.f) > epsilon){
+        transformMatrix = glm::rotate(transformMatrix, glm::radians(rotateAngel), glm::vec3(1.f, 0.f, 0.f));
+    }
+    rotation.angelX = grad;
+}
+
+void Model::setRotationY(float grad){
+    if (grad > 360.f){
+        grad = normalizeGrad(grad);
+    }
+    float rotateAngel = grad - rotation.angelY;
+    if(std::abs(rotateAngel - 0.f) > epsilon){
+        transformMatrix = glm::rotate(transformMatrix, glm::radians(rotateAngel), glm::vec3(0.f, 1.f, 0.f));
+    }
+    rotation.angelY = grad;
+}
+
+void Model::setRotationZ(float grad){
+    if (grad > 360.f){
+        grad = normalizeGrad(grad);
+    }
+    float rotateAngel = grad - rotation.angelZ;
+    if(std::abs(rotateAngel - 0.f) > epsilon){
+        transformMatrix = glm::rotate(transformMatrix, glm::radians(rotateAngel), glm::vec3(0.f, 0.f, 1.f));
+    }
+    rotation.angelZ = grad;
+}
+
+void Model::setRotation(float x, float y, float z){
+    setRotationX(x);
+    setRotationY(y);
+    setRotationZ(z);
 }
 
 void Model::setColor(float r, float g, float b){
@@ -118,6 +146,11 @@ void Model::setColor(float r, float g, float b){
 
 void Model::setColor(glm::vec3 val){
     color = val;
+}
+
+float Model::normalizeGrad(float grad){
+    float f;
+    return std::modf(grad / 360.f, &f) * 360.f;
 }
 
 }

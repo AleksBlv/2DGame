@@ -206,6 +206,8 @@ int main(void)
     Renderer::Model cube("cube");
     cube.init(d, 36);
     cube.setColor(102.f, 178.f, 255.f);
+    //cube.rotate(1.f, 0.f, 0.0f, 1.f);
+    //cube.setRotation(1.f, 1.f, 1.f, 45);
     //cube.setTexture(&myTexture);
     modelVector.push_back(&cube);
 
@@ -256,6 +258,7 @@ int main(void)
         
         lastFrame = currentTime;
         camera.move(deltaTime);
+
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
