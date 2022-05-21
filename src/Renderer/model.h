@@ -35,6 +35,7 @@ class Model{
         void setRotationZ(float grad);
 
         void setRotation(float x, float y, float z);
+        void resetRotation();
 
         Rotation getRotation();
         glm::vec3 getPosition();

@@ -105,10 +105,7 @@ void Model::setRotationX(float grad){
     if (grad > 360.f){
         grad = normalizeGrad(grad);
     }
-    float rotateAngel = grad - rotation.angelX;
-    if(std::abs(rotateAngel - 0.f) > epsilon){
-        transformMatrix = glm::rotate(transformMatrix, glm::radians(rotateAngel), glm::vec3(1.f, 0.f, 0.f));
-    }
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(1.f, 0.f, 0.f));
     rotation.angelX = grad;
 }
 
@@ -116,10 +113,7 @@ void Model::setRotationY(float grad){
     if (grad > 360.f){
         grad = normalizeGrad(grad);
     }
-    float rotateAngel = grad - rotation.angelY;
-    if(std::abs(rotateAngel - 0.f) > epsilon){
-        transformMatrix = glm::rotate(transformMatrix, glm::radians(rotateAngel), glm::vec3(0.f, 1.f, 0.f));
-    }
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(0.f, 1.f, 0.f));
     rotation.angelY = grad;
 }
 
@@ -127,17 +121,21 @@ void Model::setRotationZ(float grad){
     if (grad > 360.f){
         grad = normalizeGrad(grad);
     }
-    float rotateAngel = grad - rotation.angelZ;
-    if(std::abs(rotateAngel - 0.f) > epsilon){
-        transformMatrix = glm::rotate(transformMatrix, glm::radians(rotateAngel), glm::vec3(0.f, 0.f, 1.f));
-    }
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(0.f, 0.f, 1.f));
     rotation.angelZ = grad;
 }
 
 void Model::setRotation(float x, float y, float z){
+    resetRotation();
     setRotationX(x);
     setRotationY(y);
     setRotationZ(z);
+}
+
+void Model::resetRotation(){
+    setRotationZ(-rotation.angelZ);
+    setRotationY(-rotation.angelY);
+    setRotationX(-rotation.angelX);
 }
 
 void Model::setColor(float r, float g, float b){
