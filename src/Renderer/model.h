@@ -4,12 +4,8 @@
 #include "texture.h"
 
 namespace Renderer{
-    const double epsilon = 1e-10;
-struct Rotation{
-    float angelX = 0.f;
-    float angelY = 0.f;
-    float angelZ = 0.f;
-};
+    const double EPSILON = 1e-10;
+
 class ShaderProgram;
 class Model{
     public:
@@ -21,38 +17,40 @@ class Model{
         void setColor(glm::vec3 val);
         void setColor(float r, float g, float b);
 
+
         unsigned int getTexture();
         void prepare(ShaderProgram* shaderProgram);
         void draw(ShaderProgram* shaderProgram);
         void unbind();
-        void rotate(float x, float y, float z, float grad);
-        void move(float x, float y, float z);
-        void scale(float x, float y, float z);
+
+        glm::vec3 getColor();
+
         void setPosition(float x, float y, float z);
-
-        void setRotationX(float grad);
-        void setRotationY(float grad);
-        void setRotationZ(float grad);
-
         void setRotation(float x, float y, float z);
-        void resetRotation();
+        void setScale(float x, float y, float z);
 
-        Rotation getRotation();
+        glm::vec3 getScale();
+        glm::vec3 getRotation();
         glm::vec3 getPosition();
         
         std::string getID(){return ID;}
 
+        glm::mat4 getTransformMatrix();
+
     private:
         void genBuffers();
         float normalizeGrad(float grad);
+        
         std::string ID = "";
         Texture* texture = nullptr;
         glm::vec3 color;
         std::vector<float> verticies;
         int vertCount = 0;
         unsigned int vao=0, vbo=0;
-        glm::mat4 transformMatrix;
-        Rotation rotation;
+
+        glm::vec3 rotation;
+        glm::vec3 positions;
+        glm::vec3 scales;
 };
 
 

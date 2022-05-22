@@ -202,19 +202,23 @@ int main(void)
         d.push_back(x);
     }
 
+    Renderer::Model plate("plate");
+    plate.init(d, 36);
+    plate.setColor(17.f, 122.f, 133.f);
+    plate.setScale(100.f, 0.1f, 100.f);
+    plate.setPosition(0.f, -5.f, 0.f);
+    modelVector.push_back(&plate);
 
     Renderer::Model cube("cube");
     cube.init(d, 36);
     cube.setColor(102.f, 178.f, 255.f);
-    //cube.rotate(1.f, 0.f, 0.0f, 1.f);
-    //cube.setRotation(1.f, 1.f, 1.f, 45);
     //cube.setTexture(&myTexture);
     modelVector.push_back(&cube);
 
     Renderer::Model lightCube("lightSrc");
     lightCube.init(d, 36);
-    lightCube.move(-1.7f,  3.0f, -7.5f);
-    lightCube.scale(0.2f, 0.2f, 0.2f);
+    lightCube.setPosition(-1.7f,  3.0f, -7.5f);
+    lightCube.setScale(0.2f, 0.2f, 0.2f);
     modelVector.push_back(&lightCube);
 
 
@@ -232,7 +236,6 @@ int main(void)
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.f), (float)(window.getWidth())/(float)(window.getHeight()), 0.1f, 100.f);
     glEnable(GL_DEPTH_TEST);
-
 
     glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -273,6 +276,7 @@ int main(void)
         shaderProgram.setUniformLocation3f(lightCube.getPosition(), "lightPos");
         shaderProgram.setUniformLocation3f(camera.getCameraPosition(), "cameraPos");
         cube.draw(&shaderProgram);
+        plate.draw(&shaderProgram);
 
         lightShaderProgram.use();
         

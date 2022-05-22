@@ -9,6 +9,9 @@ namespace Renderer{
 
 Model::Model(const std::string& id): ID(id){
     color = glm::vec3(0.0f, 0.0f, 1.0f);
+    setPosition(0.f, 0.f, 0.f);
+    setRotation(0.f, 0.f, 0.f);
+    setScale(1.f, 1.f, 1.f);
 }
 
 void Model::init(const std::vector<float>& data, int size){
@@ -32,8 +35,6 @@ void Model::init(const std::vector<float>& data, int size){
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    transformMatrix = glm::mat4(1.0f);
 }
 
 void Model::setTexture(Texture* t){
@@ -57,6 +58,7 @@ void Model::prepare(ShaderProgram* shaderProgram){
     }
 
     shaderProgram->setUniformLocation3f(color, "objectColor");
+    auto transformMatrix = getTransformMatrix();
     shaderProgram->setUniformLocationMat4fv(transformMatrix, "model");
 }
 
@@ -75,67 +77,34 @@ void Model::unbind(){
     glUseProgram(0);
 }
 
-void Model::rotate(float x, float y, float z, float grad){
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(x, y, z));
-}
-
-void Model::move(float x, float y, float z){
-    transformMatrix = glm::translate(transformMatrix, glm::vec3(x, y, z));
-}
-
-void Model::scale(float x, float y, float z){
-    transformMatrix = glm::scale(transformMatrix, glm::vec3(x, y, z));
-}
-
 void Model::setPosition(float x, float y, float z){
-    transformMatrix[3][0] = x;
-    transformMatrix[3][1] = y;
-    transformMatrix[3][2] = z;
+    positions.x = x;
+    positions.y = y;
+    positions.z = z;
 }
 
 glm::vec3 Model::getPosition(){
-    return glm::vec3(transformMatrix[3]);
+    return positions;
 }
 
-Rotation Model::getRotation(){
+glm::vec3 Model::getRotation(){
     return rotation;
 }
 
-void Model::setRotationX(float grad){
-    if (grad > 360.f){
-        grad = normalizeGrad(grad);
-    }
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(1.f, 0.f, 0.f));
-    rotation.angelX = grad;
-}
-
-void Model::setRotationY(float grad){
-    if (grad > 360.f){
-        grad = normalizeGrad(grad);
-    }
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(0.f, 1.f, 0.f));
-    rotation.angelY = grad;
-}
-
-void Model::setRotationZ(float grad){
-    if (grad > 360.f){
-        grad = normalizeGrad(grad);
-    }
-    transformMatrix = glm::rotate(transformMatrix, glm::radians(grad), glm::vec3(0.f, 0.f, 1.f));
-    rotation.angelZ = grad;
-}
-
 void Model::setRotation(float x, float y, float z){
-    resetRotation();
-    setRotationX(x);
-    setRotationY(y);
-    setRotationZ(z);
+    rotation.x = x;
+    rotation.y = y;
+    rotation.z = z;
 }
 
-void Model::resetRotation(){
-    setRotationZ(-rotation.angelZ);
-    setRotationY(-rotation.angelY);
-    setRotationX(-rotation.angelX);
+void Model::setScale(float x, float y, float z){
+    scales.x = x;
+    scales.y = y;
+    scales.z = z;
+}
+
+glm::vec3 Model::getScale(){
+    return scales;
 }
 
 void Model::setColor(float r, float g, float b){
@@ -149,6 +118,21 @@ void Model::setColor(glm::vec3 val){
 float Model::normalizeGrad(float grad){
     float f;
     return std::modf(grad / 360.f, &f) * 360.f;
+}
+
+glm::mat4 Model::getTransformMatrix(){
+    glm::mat4 transformMatrix(1.f);
+    transformMatrix = glm::translate(transformMatrix, positions);
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.x), glm::vec3(1.f, 0.f, 0.f));
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.y), glm::vec3(0.f, 1.f, 0.f));
+    transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
+    transformMatrix = glm::scale(transformMatrix, scales);
+
+    return transformMatrix;
+}
+
+glm::vec3 Model::getColor(){
+    return color;
 }
 
 }

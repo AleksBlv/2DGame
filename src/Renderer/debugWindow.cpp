@@ -5,6 +5,7 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include "imgui/backends/imgui_impl_glfw.h"
 #include "utils/log.h"
+#include "../external/glm/gtc/type_ptr.hpp"
 
 using namespace Renderer;
 
@@ -67,25 +68,42 @@ void debugWindow::testWindow(){
         }
 
     }
+    ImGui::EndListBox();
+    
 
     if(models.size()){
         ImGui::Text(models[selected]->getID().c_str());
 
+        auto scale = models[selected]->getScale();
+        float sc[] = {scale.x, scale.y, scale.z, 1.0};
+        ImGui::DragFloat3("Scale", sc, 0.1f, -100.f, 100.f, "%.1f");
+        
+
         auto rotation = models[selected]->getRotation();
-        float rot[] = {rotation.angelX, rotation.angelY, rotation.angelZ};
-        ImGui::DragFloat3("Rotation", rot , 1.0f, -360.f, 360.f, "%.1f");
-        models[selected]->setRotation(rot[0], rot[1], rot[2]);
+        float rot[] = {rotation.x, rotation.y, rotation.z};
+        ImGui::DragFloat3("Rotation", rot , 1.f, -180.f, 180.f, "%.1f");
+
 
         auto position = models[selected]->getPosition();
-        float pos[] = {position.x, position.y, position.z, 1.0};
+        float pos[] = {position.x, position.y, position.z};
         ImGui::DragFloat3("Position", pos ,0.01f, -100.f, 100.f, "%.2f");
-        models[selected]->setPosition(pos[0], pos[1], pos[2]);
 
+        auto color = models[selected]->getColor();
+        float col[] = {color.x , color.y, color.z};
+        ImGui::ColorEdit3("Model color", col);
+        
+
+        //models[selected]->resetTransform();
+        models[selected]->setScale(sc[0], sc[1], sc[2]);
+        models[selected]->setRotation(rot[0], rot[1], rot[2]);
+        models[selected]->setPosition(pos[0], pos[1], pos[2]);
+        models[selected]->setColor(glm::vec3(col[0], col[1], col[2]));
         
     }
 
-    ImGui::EndListBox();
     ImGui::End();
+
+    
 }
 
 void debugWindow::setModelsVector(std::vector<Renderer::Model*>& data){
