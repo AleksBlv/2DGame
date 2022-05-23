@@ -1,6 +1,12 @@
 #version 410
 
-//in vec3 color;
+struct Material {
+   vec3 ambient;
+   vec3 diffuse;
+   vec3 specular;
+   float shininess;
+};
+
 in vec2 texCoord;
 in vec3 Normal;
 in vec3 FragPos;
@@ -11,26 +17,26 @@ uniform vec3 objectColor;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 cameraPos;
+uniform Material material;
 
 out vec4 fragColor;
 
 void main(){
    //ambient
-   float ambientStrenght = 0.1f;
-   vec3 ambientLight = ambientStrenght * lightColor;
+   vec3 ambientLight = lightColor * material.ambient;
 
-   //diffuese
+   //diffuse
    vec3 norm = normalize(Normal);
    vec3 lightDir = normalize(lightPos - FragPos);
    float diff = max(dot(norm, lightDir), 0.0);
-   vec3 diffuse = diff * lightColor;
+   vec3 diffuse = lightColor * (diff * material.diffuse);
    
    //specular
    float specularStrength = 0.5;
    vec3 viewDir = normalize(cameraPos - FragPos);
    vec3 reflectDir = reflect(-lightDir, norm);
-   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-   vec3 specular = specularStrength * spec * lightColor;
+   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+   vec3 specular = lightColor * (spec * material.specular);
 
    
    if (applyTexture > 0.5){
