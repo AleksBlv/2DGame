@@ -9,6 +9,7 @@ namespace Renderer{
         Texture(const std::string& filePath);
         void bindTexture(unsigned int slot);
         void unbindTexture();
+        unsigned int getTextureID();
         ~Texture() = default;
     private:
         unsigned int textureID = 0;

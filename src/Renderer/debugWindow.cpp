@@ -1,6 +1,6 @@
 #include "debugWindow.h"
 #include "window.h"
-#include "model.h"
+#include "baseModel.h"
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include "imgui/backends/imgui_impl_glfw.h"
@@ -45,7 +45,7 @@ debugWindow::~debugWindow(){
 }
 
 bool namesGetter(void *vec, int idx, const char** outText){
-    const auto* data = (std::vector<Renderer::Model*>*)vec;
+    const auto* data = (std::vector<Renderer::BaseModel*>*)vec;
     *outText = data->at(idx)->getID().c_str();
     return true;
 }
@@ -106,6 +106,6 @@ void debugWindow::testWindow(){
     
 }
 
-void debugWindow::setModelsVector(std::vector<Renderer::Model*>& data){
+void debugWindow::setModelsVector(std::vector<Renderer::BaseModel*>& data){
     models = data;
 }

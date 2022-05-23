@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Renderer/shaderProgram.h"
 #include "Renderer/texture.h"
-#include "Renderer/model.h"
+#include "Renderer/baseModel.h"
 #include "Renderer/camera.h"
 #include "Renderer/debugWindow.h"
 #include "utils/log.h"
@@ -174,7 +174,7 @@ int main(void)
         LOG_ERROR("failed to create window");
         return -1;
     }
-    std::vector<Renderer::Model*> modelVector;
+    std::vector<Renderer::BaseModel*> modelVector;
     Renderer::Texture myTexture("assets/web_cat.jpeg");
     
     glClearColor(0.1, 0.1, 0.1, 0);
@@ -202,20 +202,20 @@ int main(void)
         d.push_back(x);
     }
 
-    Renderer::Model plate("plate");
+    Renderer::BaseModel plate("plate");
     plate.init(d, 36);
     plate.setColor(17.f, 122.f, 133.f);
     plate.setScale(100.f, 0.1f, 100.f);
     plate.setPosition(0.f, -5.f, 0.f);
     modelVector.push_back(&plate);
 
-    Renderer::Model cube("cube");
+    Renderer::BaseModel cube("cube");
     cube.init(d, 36);
     cube.setColor(102.f, 178.f, 255.f);
     //cube.setTexture(&myTexture);
     modelVector.push_back(&cube);
 
-    Renderer::Model lightCube("lightSrc");
+    Renderer::BaseModel lightCube("lightSrc");
     lightCube.init(d, 36);
     lightCube.setPosition(-1.7f,  3.0f, -7.5f);
     lightCube.setScale(0.2f, 0.2f, 0.2f);

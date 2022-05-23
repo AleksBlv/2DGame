@@ -43,4 +43,8 @@ void Texture::unbindTexture(){
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+unsigned int Texture::getTextureID(){
+    return textureID;
+}
+
 }

@@ -1,4 +1,4 @@
-#include "model.h"
+#include "baseModel.h"
 #include <glad/glad.h>
 #include "../external/glm/gtc/matrix_transform.hpp"
 #include "../external/glm/gtc/type_ptr.hpp"
@@ -7,14 +7,19 @@
 
 namespace Renderer{
 
-Model::Model(const std::string& id): ID(id){
+BaseModel::BaseModel(const std::string& id): ID(id){
     color = glm::vec3(0.0f, 0.0f, 1.0f);
     setPosition(0.f, 0.f, 0.f);
     setRotation(0.f, 0.f, 0.f);
     setScale(1.f, 1.f, 1.f);
+
+    material.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
+    material.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
+    material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+    material.shininess = 32.f;
 }
 
-void Model::init(const std::vector<float>& data, int size){
+void BaseModel::init(const std::vector<float>& data, int size){
     verticies = data;
     vertCount = size;
 
@@ -37,11 +42,11 @@ void Model::init(const std::vector<float>& data, int size){
     glBindVertexArray(0);
 }
 
-void Model::setTexture(Texture* t){
+void BaseModel::setTexture(Texture* t){
     texture = t;
 }
 
-void Model::prepare(ShaderProgram* shaderProgram){
+void BaseModel::prepare(ShaderProgram* shaderProgram){
     glUseProgram(shaderProgram->getProgramID());
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -60,15 +65,21 @@ void Model::prepare(ShaderProgram* shaderProgram){
     shaderProgram->setUniformLocation3f(color, "objectColor");
     auto transformMatrix = getTransformMatrix();
     shaderProgram->setUniformLocationMat4fv(transformMatrix, "model");
+
+    shaderProgram->setUniformLocation3f(material.ambient, "material.ambient");
+    shaderProgram->setUniformLocation3f(material.diffuse, "material.diffuse");
+    shaderProgram->setUniformLocation3f(material.specular, "material.specular");
+    shaderProgram->setUniformLocation1f(material.shininess, "material.shininess");
+
 }
 
-void Model::draw(ShaderProgram* shaderProgram){
+void BaseModel::draw(ShaderProgram* shaderProgram){
     prepare(shaderProgram);
     glDrawArrays(GL_TRIANGLES, 0, vertCount);
     unbind();
 }
 
-void Model::unbind(){
+void BaseModel::unbind(){
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisableVertexAttribArray(0);
@@ -77,50 +88,50 @@ void Model::unbind(){
     glUseProgram(0);
 }
 
-void Model::setPosition(float x, float y, float z){
+void BaseModel::setPosition(float x, float y, float z){
     positions.x = x;
     positions.y = y;
     positions.z = z;
 }
 
-glm::vec3 Model::getPosition(){
+glm::vec3 BaseModel::getPosition(){
     return positions;
 }
 
-glm::vec3 Model::getRotation(){
+glm::vec3 BaseModel::getRotation(){
     return rotation;
 }
 
-void Model::setRotation(float x, float y, float z){
+void BaseModel::setRotation(float x, float y, float z){
     rotation.x = x;
     rotation.y = y;
     rotation.z = z;
 }
 
-void Model::setScale(float x, float y, float z){
+void BaseModel::setScale(float x, float y, float z){
     scales.x = x;
     scales.y = y;
     scales.z = z;
 }
 
-glm::vec3 Model::getScale(){
+glm::vec3 BaseModel::getScale(){
     return scales;
 }
 
-void Model::setColor(float r, float g, float b){
+void BaseModel::setColor(float r, float g, float b){
     color = glm::vec3(r/255.f, g/255.f, b/255.f);
 }
 
-void Model::setColor(glm::vec3 val){
+void BaseModel::setColor(glm::vec3 val){
     color = val;
 }
 
-float Model::normalizeGrad(float grad){
+float BaseModel::normalizeGrad(float grad){
     float f;
     return std::modf(grad / 360.f, &f) * 360.f;
 }
 
-glm::mat4 Model::getTransformMatrix(){
+glm::mat4 BaseModel::getTransformMatrix(){
     glm::mat4 transformMatrix(1.f);
     transformMatrix = glm::translate(transformMatrix, positions);
     transformMatrix = glm::rotate(transformMatrix, glm::radians(rotation.x), glm::vec3(1.f, 0.f, 0.f));
@@ -131,8 +142,12 @@ glm::mat4 Model::getTransformMatrix(){
     return transformMatrix;
 }
 
-glm::vec3 Model::getColor(){
+glm::vec3 BaseModel::getColor(){
     return color;
+}
+
+unsigned int BaseModel::getTexture(){
+    return texture->getTextureID();
 }
 
 }

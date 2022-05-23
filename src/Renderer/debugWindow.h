@@ -3,7 +3,7 @@
 
 namespace Renderer{
     class Window;
-    class Model;
+    class BaseModel;
     class debugWindow{
         public:
             debugWindow(Window* pWindow);
@@ -11,11 +11,11 @@ namespace Renderer{
 
             void update();
             void testWindow();
-            void setModelsVector(std::vector<Renderer::Model*>& data);
+            void setModelsVector(std::vector<Renderer::BaseModel*>& data);
 
         private:
             Window* appWindow = nullptr;
-            std::vector<Renderer::Model*> models;
+            std::vector<Renderer::BaseModel*> models;
             int selectedModel = 0;
     };
 }

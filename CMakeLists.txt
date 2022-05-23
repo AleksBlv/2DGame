@@ -15,13 +15,14 @@ add_executable(${PROJECT_NAME}
     src/fromGit/stb_image.cpp
     src/Renderer/texture.h
     src/Renderer/texture.cpp
-    src/Renderer/model.h
-    src/Renderer/model.cpp
+    src/Renderer/baseModel.h
+    src/Renderer/baseModel.cpp
     src/Renderer/camera.h
     src/Renderer/camera.cpp
     src/utils/log.h
     src/Renderer/debugWindow.h
     src/Renderer/debugWindow.cpp
+    src/Renderer/modelInterface.h
 )
 
 set(link_src "${CMAKE_SOURCE_DIR}/Assets")
