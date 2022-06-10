@@ -23,6 +23,9 @@ add_executable(${PROJECT_NAME}
     src/Renderer/debugWindow.h
     src/Renderer/debugWindow.cpp
     src/Renderer/modelInterface.h
+    src/Renderer/materials.h
+    src/Renderer/light.h
+    src/Renderer/light.cpp
 )
 
 set(link_src "${CMAKE_SOURCE_DIR}/Assets")
