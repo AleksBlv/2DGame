@@ -13,8 +13,9 @@ BaseModel::BaseModel(const std::string& id): ID(id){
     setRotation(0.f, 0.f, 0.f);
     setScale(1.f, 1.f, 1.f);
 
-    material.ambient = glm::vec3(1.0f, 0.5f, 0.31f);
-    material.diffuse = glm::vec3(1.0f, 0.5f, 0.31f);
+    //material = materialMap["silver"];
+    material.ambient = glm::vec3(1.f, 0.5f, 0.31f);
+    material.diffuse = glm::vec3(1.f, 0.5f, 0.31f);
     material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
     material.shininess = 32.f;
 }

@@ -1,6 +1,7 @@
 #include "debugWindow.h"
 #include "window.h"
 #include "baseModel.h"
+#include "light.h"
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include "imgui/backends/imgui_impl_glfw.h"
@@ -73,20 +74,20 @@ void debugWindow::testWindow(){
 
     if(models.size()){
         ImGui::Text(models[selected]->getID().c_str());
-
+        bool valueChanged = false;
         auto scale = models[selected]->getScale();
         float sc[] = {scale.x, scale.y, scale.z, 1.0};
-        ImGui::DragFloat3("Scale", sc, 0.1f, -100.f, 100.f, "%.1f");
+        valueChanged |= ImGui::DragFloat3("Scale", sc, 0.1f, -100.f, 100.f, "%.1f");
         
 
         auto rotation = models[selected]->getRotation();
         float rot[] = {rotation.x, rotation.y, rotation.z};
-        ImGui::DragFloat3("Rotation", rot , 1.f, -180.f, 180.f, "%.1f");
+        valueChanged |= ImGui::DragFloat3("Rotation", rot , 1.f, -180.f, 180.f, "%.1f");
 
 
         auto position = models[selected]->getPosition();
         float pos[] = {position.x, position.y, position.z};
-        ImGui::DragFloat3("Position", pos ,0.01f, -100.f, 100.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("Position", pos ,0.01f, -100.f, 100.f, "%.2f");
 
         auto color = models[selected]->getColor();
         float col[] = {color.x , color.y, color.z};
@@ -94,12 +95,64 @@ void debugWindow::testWindow(){
         
 
         //models[selected]->resetTransform();
-        models[selected]->setScale(sc[0], sc[1], sc[2]);
-        models[selected]->setRotation(rot[0], rot[1], rot[2]);
-        models[selected]->setPosition(pos[0], pos[1], pos[2]);
+        if(valueChanged){
+            models[selected]->setScale(sc[0], sc[1], sc[2]);
+            models[selected]->setRotation(rot[0], rot[1], rot[2]);
+            models[selected]->setPosition(pos[0], pos[1], pos[2]);
+        }
         models[selected]->setColor(glm::vec3(col[0], col[1], col[2]));
+
         
+
+        ImGui::Text("Material properties");
+        valueChanged = false;
+        auto material = models[selected]->getmaterial();
+
+        auto ambient = material.ambient;
+        auto diffuse = material.diffuse;
+        auto specular = material.specular;
+        auto shininess = material.shininess;
+        
+        float amb[] = {ambient.x, ambient.y, ambient.z};
+        float diff[] = {diffuse.x, diffuse.y, diffuse.z};
+        float spec[] = {specular.x, specular.y, specular.z};
+
+        valueChanged |= ImGui::DragFloat3("Ambient", amb ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("Diffuse", diff ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("Specular", spec ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat("Shininess", &shininess, 1.f, 0.f, 256.f, "%.0f");
+
+        if(valueChanged){
+            Material newMaterial(glm::vec3(amb[0], amb[1], amb[2]),
+                                glm::vec3(diff[0], diff[1], diff[2]),
+                                glm::vec3(spec[0], spec[1], spec[2]),
+                                shininess);
+            models[selected]->setMaterial(newMaterial);
+        }
     }
+
+    if(light){
+        bool valueChanged = false;
+        ImGui::Text("Light properties");
+        auto ambient = light->getAmbient();
+        auto diffuse = light->getDiffuse();
+        auto specular = light->getSpecular();
+        
+        float amb[] = {ambient.x, ambient.y, ambient.z};
+        float diff[] = {diffuse.x, diffuse.y, diffuse.z};
+        float spec[] = {specular.x, specular.y, specular.z};
+
+        valueChanged |= ImGui::DragFloat3("Ambient", amb ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("Diffuse", diff ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("Specular", spec ,0.01f, 0.f, 1.f, "%.2f");
+
+        if(valueChanged){
+            light->setLight(glm::vec3(amb[0], amb[1], amb[2]),
+                            glm::vec3(diff[0], diff[1], diff[2]),
+                            glm::vec3(spec[0], spec[1], spec[2]));
+        }
+    }
+
 
     ImGui::End();
 

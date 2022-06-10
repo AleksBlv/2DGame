@@ -3,16 +3,12 @@
 #include "glm/glm.hpp"
 #include "texture.h"
 #include "modelInterface.h"
+#include "materials.h"
 
 namespace Renderer{
     const double EPSILON = 1e-10;
 
-    struct Material {
-        glm::vec3 ambient;
-        glm::vec3 diffuse;
-        glm::vec3 specular;
-        float shininess;
-    };
+    
 
 class ShaderProgram;
 class BaseModel : public ModelInterface{
@@ -40,6 +36,9 @@ class BaseModel : public ModelInterface{
         glm::vec3 getScale() override;
         glm::vec3 getRotation() override;
         glm::vec3 getPosition() override;
+
+        void setMaterial(Material m) {material = m;};
+        Material getmaterial(){return material;}
         
         std::string getID() override {return ID;}
 

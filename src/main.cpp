@@ -3,6 +3,7 @@
 #include "Renderer/shaderProgram.h"
 #include "Renderer/texture.h"
 #include "Renderer/baseModel.h"
+#include "Renderer/light.h"
 #include "Renderer/camera.h"
 #include "Renderer/debugWindow.h"
 #include "utils/log.h"
@@ -207,16 +208,19 @@ int main(void)
     plate.setColor(17.f, 122.f, 133.f);
     plate.setScale(100.f, 0.1f, 100.f);
     plate.setPosition(0.f, -5.f, 0.f);
+    plate.setMaterial(Renderer::materialMap["obsidian"]);
     modelVector.push_back(&plate);
 
     Renderer::BaseModel cube("cube");
     cube.init(d, 36);
     cube.setColor(102.f, 178.f, 255.f);
+    cube.setMaterial(Renderer::materialMap["pearl"]);
     //cube.setTexture(&myTexture);
     modelVector.push_back(&cube);
 
-    Renderer::BaseModel lightCube("lightSrc");
+    Renderer::Light lightCube("lightSrc");
     lightCube.init(d, 36);
+    lightCube.setLight(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.f, 1.f, 1.f));
     lightCube.setPosition(-1.7f,  3.0f, -7.5f);
     lightCube.setScale(0.2f, 0.2f, 0.2f);
     modelVector.push_back(&lightCube);
@@ -250,6 +254,7 @@ int main(void)
 
     Renderer::debugWindow dbWin(&window);
     dbWin.setModelsVector(modelVector);
+    dbWin.setLight(&lightCube);
 
     while (!window.shouldClose())
     {
@@ -273,8 +278,13 @@ int main(void)
         auto view = camera.getCameraMatrix();
         shaderProgram.setUniformLocationMat4fv(view, "view");
         shaderProgram.setUniformLocationMat4fv(projection, "projection");
-        shaderProgram.setUniformLocation3f(lightCube.getPosition(), "lightPos");
+        shaderProgram.setUniformLocation3f(lightCube.getPosition(), "light.position");
+        shaderProgram.setUniformLocation3f(lightCube.getAmbient(), "light.ambient");
+        shaderProgram.setUniformLocation3f(lightCube.getDiffuse(), "light.diffuse");
+        shaderProgram.setUniformLocation3f(lightCube.getSpecular(), "light.specular");
+
         shaderProgram.setUniformLocation3f(camera.getCameraPosition(), "cameraPos");
+        
         cube.draw(&shaderProgram);
         plate.draw(&shaderProgram);
 
