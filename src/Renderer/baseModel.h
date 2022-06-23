@@ -38,7 +38,9 @@ class BaseModel : public ModelInterface{
         glm::vec3 getPosition() override;
 
         void setMaterial(Material m) {material = m;};
+        void setMaterialName(std::string name) {materialName = name;}
         Material getmaterial(){return material;}
+        const std::string& getMaterialName() {return materialName;}
         
         std::string getID() override {return ID;}
 
@@ -49,6 +51,7 @@ class BaseModel : public ModelInterface{
         float normalizeGrad(float grad);
         
         std::string ID = "";
+        std::string materialName = "";
         Texture* texture = nullptr;
         glm::vec3 color;
         std::vector<float> verticies;

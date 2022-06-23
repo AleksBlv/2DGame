@@ -92,9 +92,7 @@ void debugWindow::testWindow(){
         auto color = models[selected]->getColor();
         float col[] = {color.x , color.y, color.z};
         ImGui::ColorEdit3("Model color", col);
-        
-
-        //models[selected]->resetTransform();
+    
         if(valueChanged){
             models[selected]->setScale(sc[0], sc[1], sc[2]);
             models[selected]->setRotation(rot[0], rot[1], rot[2]);
@@ -129,6 +127,25 @@ void debugWindow::testWindow(){
                                 shininess);
             models[selected]->setMaterial(newMaterial);
         }
+
+        valueChanged = false;
+        std::vector<const char*> materialNames;
+        int index = 0;
+        int itemCurrent = 0;
+        auto currentMaterial = models[selected]->getMaterialName();
+        for(const auto& [key, val]: materialMap){
+            materialNames.push_back(key.c_str());
+            if(currentMaterial == key){
+                itemCurrent = index;
+            }
+            index++;
+        }
+        
+        valueChanged = ImGui::Combo("Combo", &itemCurrent, materialNames.data(), materialNames.size());
+        if(valueChanged){
+            models[selected]->setMaterial(materialMap[materialNames[itemCurrent]]);
+            models[selected]->setMaterialName(materialNames[itemCurrent]);
+        }
     }
 
     if(light){
@@ -142,9 +159,9 @@ void debugWindow::testWindow(){
         float diff[] = {diffuse.x, diffuse.y, diffuse.z};
         float spec[] = {specular.x, specular.y, specular.z};
 
-        valueChanged |= ImGui::DragFloat3("Ambient", amb ,0.01f, 0.f, 1.f, "%.2f");
-        valueChanged |= ImGui::DragFloat3("Diffuse", diff ,0.01f, 0.f, 1.f, "%.2f");
-        valueChanged |= ImGui::DragFloat3("Specular", spec ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("LAmbient", amb ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("LDiffuse", diff ,0.01f, 0.f, 1.f, "%.2f");
+        valueChanged |= ImGui::DragFloat3("LSpecular", spec ,0.01f, 0.f, 1.f, "%.2f");
 
         if(valueChanged){
             light->setLight(glm::vec3(amb[0], amb[1], amb[2]),
@@ -156,7 +173,6 @@ void debugWindow::testWindow(){
 
     ImGui::End();
 
-    
 }
 
 void debugWindow::setModelsVector(std::vector<Renderer::BaseModel*>& data){
