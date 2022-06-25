@@ -34,4 +34,13 @@ namespace Renderer{
         {"silver", Material(glm::vec3(0.19225, 0.19225, 0.19225), glm::vec3(0.50754, 0.50754, 0.50754), glm::vec3(0.508273, 0.508273, 0.508273), 0.4f* 128.f)},
     };
 
+    static std::vector<std::string> getMaterialNames(){
+        std::vector<std::string> result;
+        result.reserve(materialMap.size());
+        for(const auto& [key, value] : materialMap){
+            result.push_back(key);
+        }
+        return result;
+    }
+
 }

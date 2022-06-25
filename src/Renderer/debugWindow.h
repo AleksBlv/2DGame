@@ -12,13 +12,13 @@ namespace Renderer{
 
             void update();
             void testWindow();
-            void setModelsVector(std::vector<Renderer::BaseModel*>& data);
+            void setModelsVector(std::vector<std::shared_ptr<Renderer::BaseModel>>& data);
             void setLight(Light* l){light = l;};
 
         private:
             Window* appWindow = nullptr;
             Light* light = nullptr;
-            std::vector<Renderer::BaseModel*> models;
+            std::vector<std::shared_ptr<Renderer::BaseModel>> models;
             int selectedModel = 0;
 
     };

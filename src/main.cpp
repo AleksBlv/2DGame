@@ -175,7 +175,7 @@ int main(void)
         LOG_ERROR("failed to create window");
         return -1;
     }
-    std::vector<Renderer::BaseModel*> modelVector;
+    std::vector<std::shared_ptr<Renderer::BaseModel>> modelVector;
     Renderer::Texture myTexture("assets/web_cat.jpeg");
     
     glClearColor(0.1, 0.1, 0.1, 0);
@@ -203,27 +203,33 @@ int main(void)
         d.push_back(x);
     }
 
-    Renderer::BaseModel plate("plate");
-    plate.init(d, 36);
-    plate.setColor(17.f, 122.f, 133.f);
-    plate.setScale(100.f, 0.1f, 100.f);
-    plate.setPosition(0.f, -5.f, 0.f);
-    plate.setMaterial(Renderer::materialMap["obsidian"]);
-    modelVector.push_back(&plate);
+    auto plate = std::make_shared<Renderer::BaseModel>("plate");
+    plate->init(d, 36);
+    plate->setColor(17.f, 122.f, 133.f);
+    plate->setScale(100.f, 0.1f, 100.f);
+    plate->setPosition(0.f, -5.f, 0.f);
+    plate->setMaterial(Renderer::materialMap["obsidian"]);
+    modelVector.push_back(plate);
 
-    Renderer::BaseModel cube("cube");
-    cube.init(d, 36);
-    cube.setColor(102.f, 178.f, 255.f);
-    cube.setMaterial(Renderer::materialMap["pearl"]);
-    //cube.setTexture(&myTexture);
-    modelVector.push_back(&cube);
+    auto materialNames = Renderer::getMaterialNames();
+    for(int i = 0; i < materialNames.size(); ++i){
+        auto cube = std::make_shared<Renderer::BaseModel>("cube" + std::to_string(i));
+        cube->init(d, 36);
+        cube->setColor(102.f, 178.f, 255.f);
+        cube->setMaterial(Renderer::materialMap[materialNames[i]], materialNames[i]);
+        cube->setPosition(i*2, 0.f, 0.f);
+        //cube.setTexture(&myTexture);
+        modelVector.push_back(cube);
+    }
+    
 
-    Renderer::Light lightCube("lightSrc");
-    lightCube.init(d, 36);
-    lightCube.setLight(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.f, 1.f, 1.f));
-    lightCube.setPosition(-1.7f,  3.0f, -7.5f);
-    lightCube.setScale(0.2f, 0.2f, 0.2f);
-    modelVector.push_back(&lightCube);
+    //Renderer::Light lightCube("lightSrc");
+    auto lightCube = std::make_shared<Renderer::Light>("light");
+    lightCube->init(d, 36);
+    lightCube->setLight(glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.f, 1.f, 1.f));
+    lightCube->setPosition(-1.7f,  3.0f, -7.5f);
+    lightCube->setScale(0.2f, 0.2f, 0.2f);
+    modelVector.push_back(lightCube);
 
 
 
@@ -254,7 +260,7 @@ int main(void)
 
     Renderer::debugWindow dbWin(&window);
     dbWin.setModelsVector(modelVector);
-    dbWin.setLight(&lightCube);
+    dbWin.setLight(lightCube.get());
 
     while (!window.shouldClose())
     {
@@ -278,26 +284,25 @@ int main(void)
         auto view = camera.getCameraMatrix();
         shaderProgram.setUniformLocationMat4fv(view, "view");
         shaderProgram.setUniformLocationMat4fv(projection, "projection");
-        shaderProgram.setUniformLocation3f(lightCube.getPosition(), "light.position");
-        shaderProgram.setUniformLocation3f(lightCube.getAmbient(), "light.ambient");
-        shaderProgram.setUniformLocation3f(lightCube.getDiffuse(), "light.diffuse");
-        shaderProgram.setUniformLocation3f(lightCube.getSpecular(), "light.specular");
+        shaderProgram.setUniformLocation3f(static_cast<Renderer::Light*>(lightCube.get())->getPosition(), "light.position");
+        shaderProgram.setUniformLocation3f(static_cast<Renderer::Light*>(lightCube.get())->getAmbient(), "light.ambient");
+        shaderProgram.setUniformLocation3f(static_cast<Renderer::Light*>(lightCube.get())->getDiffuse(), "light.diffuse");
+        shaderProgram.setUniformLocation3f(static_cast<Renderer::Light*>(lightCube.get())->getSpecular(), "light.specular");
 
         shaderProgram.setUniformLocation3f(camera.getCameraPosition(), "cameraPos");
         
-        cube.draw(&shaderProgram);
-        plate.draw(&shaderProgram);
+        for(auto m: modelVector){
+            auto l = dynamic_cast<Renderer::Light*>(m.get());
+            if(l == nullptr){
+                m->draw(&shaderProgram);
+            }
+        }
 
         lightShaderProgram.use();
         
         lightShaderProgram.setUniformLocationMat4fv(view, "view");
         lightShaderProgram.setUniformLocationMat4fv(projection, "projection");
-        lightCube.draw(&lightShaderProgram);
-
-        // for(auto& model: models){
-        //     model->rotate(1.f, 1.f, 1.f, 1.f);
-        //     model->draw(shaderProgram.getProgramID());
-        // }
+        lightCube->draw(&lightShaderProgram);
 
         dbWin.update();
         /* Swap front and back buffers */

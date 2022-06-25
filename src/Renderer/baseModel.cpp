@@ -151,4 +151,9 @@ unsigned int BaseModel::getTexture(){
     return texture->getTextureID();
 }
 
+void BaseModel::setMaterial(Material m, const std::string& name){
+    material = m;
+    materialName = name;
+}
+
 }

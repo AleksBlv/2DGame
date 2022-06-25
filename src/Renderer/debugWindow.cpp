@@ -143,8 +143,7 @@ void debugWindow::testWindow(){
         
         valueChanged = ImGui::Combo("Combo", &itemCurrent, materialNames.data(), materialNames.size());
         if(valueChanged){
-            models[selected]->setMaterial(materialMap[materialNames[itemCurrent]]);
-            models[selected]->setMaterialName(materialNames[itemCurrent]);
+            models[selected]->setMaterial(materialMap[materialNames[itemCurrent]], materialNames[itemCurrent]);
         }
     }
 
@@ -175,6 +174,6 @@ void debugWindow::testWindow(){
 
 }
 
-void debugWindow::setModelsVector(std::vector<Renderer::BaseModel*>& data){
+void debugWindow::setModelsVector(std::vector<std::shared_ptr<Renderer::BaseModel>>& data){
     models = data;
 }

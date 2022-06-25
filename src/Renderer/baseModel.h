@@ -37,8 +37,7 @@ class BaseModel : public ModelInterface{
         glm::vec3 getRotation() override;
         glm::vec3 getPosition() override;
 
-        void setMaterial(Material m) {material = m;};
-        void setMaterialName(std::string name) {materialName = name;}
+        void setMaterial(Material m, const std::string& name = "");
         Material getmaterial(){return material;}
         const std::string& getMaterialName() {return materialName;}
         
