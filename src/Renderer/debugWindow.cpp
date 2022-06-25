@@ -106,45 +106,23 @@ void debugWindow::testWindow(){
         valueChanged = false;
         auto material = models[selected]->getmaterial();
 
-        auto ambient = material.ambient;
+        // auto ambient = material.ambient;
         auto diffuse = material.diffuse;
         auto specular = material.specular;
         auto shininess = material.shininess;
         
-        float amb[] = {ambient.x, ambient.y, ambient.z};
-        float diff[] = {diffuse.x, diffuse.y, diffuse.z};
         float spec[] = {specular.x, specular.y, specular.z};
 
-        valueChanged |= ImGui::DragFloat3("Ambient", amb ,0.01f, 0.f, 1.f, "%.2f");
-        valueChanged |= ImGui::DragFloat3("Diffuse", diff ,0.01f, 0.f, 1.f, "%.2f");
         valueChanged |= ImGui::DragFloat3("Specular", spec ,0.01f, 0.f, 1.f, "%.2f");
         valueChanged |= ImGui::DragFloat("Shininess", &shininess, 1.f, 0.f, 256.f, "%.0f");
 
         if(valueChanged){
-            Material newMaterial(glm::vec3(amb[0], amb[1], amb[2]),
-                                glm::vec3(diff[0], diff[1], diff[2]),
+            Material newMaterial(models[selected]->getTexture(),
                                 glm::vec3(spec[0], spec[1], spec[2]),
                                 shininess);
             models[selected]->setMaterial(newMaterial);
         }
 
-        valueChanged = false;
-        std::vector<const char*> materialNames;
-        int index = 0;
-        int itemCurrent = 0;
-        auto currentMaterial = models[selected]->getMaterialName();
-        for(const auto& [key, val]: materialMap){
-            materialNames.push_back(key.c_str());
-            if(currentMaterial == key){
-                itemCurrent = index;
-            }
-            index++;
-        }
-        
-        valueChanged = ImGui::Combo("Combo", &itemCurrent, materialNames.data(), materialNames.size());
-        if(valueChanged){
-            models[selected]->setMaterial(materialMap[materialNames[itemCurrent]], materialNames[itemCurrent]);
-        }
     }
 
     if(light){

@@ -14,8 +14,7 @@ BaseModel::BaseModel(const std::string& id): ID(id){
     setScale(1.f, 1.f, 1.f);
 
     //material = materialMap["silver"];
-    material.ambient = glm::vec3(1.f, 0.5f, 0.31f);
-    material.diffuse = glm::vec3(1.f, 0.5f, 0.31f);
+    material.diffuse = 0u;
     material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
     material.shininess = 32.f;
 }
@@ -38,6 +37,7 @@ void BaseModel::init(const std::vector<float>& data, int size){
     glEnableVertexAttribArray(1);
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -67,8 +67,7 @@ void BaseModel::prepare(ShaderProgram* shaderProgram){
     auto transformMatrix = getTransformMatrix();
     shaderProgram->setUniformLocationMat4fv(transformMatrix, "model");
 
-    shaderProgram->setUniformLocation3f(material.ambient, "material.ambient");
-    shaderProgram->setUniformLocation3f(material.diffuse, "material.diffuse");
+    shaderProgram->setUniformLocationInt(material.diffuse, "material.duffuse");
     shaderProgram->setUniformLocation3f(material.specular, "material.specular");
     shaderProgram->setUniformLocation1f(material.shininess, "material.shininess");
 
@@ -148,7 +147,9 @@ glm::vec3 BaseModel::getColor(){
 }
 
 unsigned int BaseModel::getTexture(){
-    return texture->getTextureID();
+    if(texture)
+        return texture->getTextureID();
+    return 0u;
 }
 
 void BaseModel::setMaterial(Material m, const std::string& name){

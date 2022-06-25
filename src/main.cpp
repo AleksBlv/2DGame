@@ -176,9 +176,10 @@ int main(void)
         return -1;
     }
     std::vector<std::shared_ptr<Renderer::BaseModel>> modelVector;
-    Renderer::Texture myTexture("assets/web_cat.jpeg");
+    Renderer::Texture myTexture("assets/boxTexture.png");
+    Renderer::Texture groundTexture("assets/ground.jpeg");
     
-    glClearColor(0.1, 0.1, 0.1, 0);
+    glClearColor(68.f/255.f, 120.f/255.f, 199.f/255.f, 0);
 
     //std::string vertexShader(vertex_Shader);
     //std::string fragmentShader(fragment_Shader);
@@ -208,19 +209,17 @@ int main(void)
     plate->setColor(17.f, 122.f, 133.f);
     plate->setScale(100.f, 0.1f, 100.f);
     plate->setPosition(0.f, -5.f, 0.f);
-    plate->setMaterial(Renderer::materialMap["obsidian"]);
+    plate->setTexture(&groundTexture);
     modelVector.push_back(plate);
 
-    auto materialNames = Renderer::getMaterialNames();
-    for(int i = 0; i < materialNames.size(); ++i){
-        auto cube = std::make_shared<Renderer::BaseModel>("cube" + std::to_string(i));
-        cube->init(d, 36);
-        cube->setColor(102.f, 178.f, 255.f);
-        cube->setMaterial(Renderer::materialMap[materialNames[i]], materialNames[i]);
-        cube->setPosition(i*2, 0.f, 0.f);
-        //cube.setTexture(&myTexture);
-        modelVector.push_back(cube);
-    }
+    
+    auto cube = std::make_shared<Renderer::BaseModel>("cube");
+    cube->init(d, 36);
+    cube->setTexture(&myTexture);
+    auto material = Renderer::Material(0, glm::vec3(0.5f, 0.5f, 0.5f), 64.f);
+    cube->setMaterial(material);
+    modelVector.push_back(cube);
+    
     
 
     //Renderer::Light lightCube("lightSrc");
@@ -231,14 +230,6 @@ int main(void)
     lightCube->setScale(0.2f, 0.2f, 0.2f);
     modelVector.push_back(lightCube);
 
-
-
-    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0);
-    //glm::mat4 model = glm::mat4(1.0f);
-
-    //model = glm::rotate(model, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
-    //trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-    //trans = glm::translate(trans, glm::vec3(-0.5f, -0.5f, 0.0f));
 
     glm::mat4 view = glm::mat4(1.f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));

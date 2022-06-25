@@ -113,4 +113,9 @@ namespace Renderer{
         GLuint shaderLocation = glGetUniformLocation(programID, location.c_str());
         glUniformMatrix4fv(shaderLocation, 1, GL_FALSE, glm::value_ptr(data));
     }
+
+    void ShaderProgram::setUniformLocationInt(int data, const std::string& location){
+        GLuint shaderLocation = glGetUniformLocation(programID, location.c_str());
+        glUniform1i(shaderLocation, data);
+    }
 }

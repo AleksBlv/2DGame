@@ -17,6 +17,7 @@ namespace Renderer{
             void setUniformLocation3f(glm::vec3 data, const std::string& location);
             void setUniformLocation1f(float data, const std::string& location);
             void setUniformLocationMat4fv(glm::mat4 data, const std::string& location);
+            void setUniformLocationInt(int data, const std::string& location);
 
             ~ShaderProgram();
             bool getCompiledStatus() const {return isCompiled; }
